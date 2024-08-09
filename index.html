@@ -3,60 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Explained Through Video Games</title>
+    <title>Financial Summoner's Rift</title>
+    <link href="https://fonts.googleapis.com/css2?family=Beaufort+for+LOL:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #0A1428;
+            --secondary: #091428;
+            --accent: #C8AA6E;
+            --text: #F0E6D2;
+            --highlight: #785A28;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Beaufort for LOL', serif;
             line-height: 1.6;
-            margin: 0 auto;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary);
+            background-image: url('https://www.publicdomainpictures.net/pictures/290000/velka/retro-80s-background.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        .container {
             max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
+            background-color: rgba(10, 20, 40, 0.8);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(200, 170, 110, 0.5);
         }
         h1, h2 {
-            color: #333;
+            color: var(--accent);
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
-        .concept {
-            border: 1px solid #ddd;
-            margin-bottom: 20px;
-            padding: 15px;
+        .step {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(9, 20, 40, 0.7);
+            border: 1px solid var(--highlight);
+            border-radius: 5px;
+        }
+        .step-title {
+            font-size: 1.2em;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .champion-quote {
+            font-style: italic;
+            color: #A09B8C;
+            margin-top: 10px;
+        }
+        .action-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--highlight);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .action-button:hover {
+            background-color: var(--accent);
+            color: var(--primary);
+        }
+        .more-info {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(200, 170, 110, 0.1);
+            border-radius: 5px;
+        }
+        .more-info-toggle {
+            cursor: pointer;
+            color: var(--accent);
+            text-decoration: none;
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        .more-info-toggle:hover {
+            background-color: var(--accent);
+            color: var(--primary);
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Finance Explained Through Video Games</h1>
-        <p>Understanding financial concepts using familiar gaming analogies</p>
-    </header>
+    <div class="container">
+        <h1>Financial Summoner's Rift</h1>
+        
+        <p>Welcome to the Rift, Summoner! As we journey through this tortured metaphor, you'll find yourself getting familiar with everything you need to know to make your way toward financial stability. Already stable? Don't worry, there are some treats for you in here too. Without further ado, let's jump into our game!</p>
 
-    <main>
-        <section class="concept">
-            <h2>Savings: Farming Gold</h2>
-            <p>[Your explanation using MOBA gold farming as an analogy for saving money]</p>
-        </section>
+        <div class="step">
+            <div class="step-title">
+                <img src="/api/placeholder/40/40" alt="Clipboard icon" class="step-icon">
+                Step 0: Select Your Runes (Make a Budget)
+            </div>
+            <p>If you don't know where you're going, you can't get there. If you load in with Draven runes but you're playing Yuumi, you're not going to have a good time.</p>
+            <a href="#budget-tool" class="action-button">Create Your Budget</a>
+            <div class="more-info-toggle">⚔️ Show More</div>
+            <div class="more-info">
+                <p>"Making a budget is boring!" Yeah. Sorry. A lot of this is boring. It's funny and there are some great jokes, but this is boring. If you want to go through life as PtA Yuumi, close this page. If you want to look at your bank account without grimacing someday, make a budget.</p>
+                <p>All you have to do at first is track your spending. Don't feel any pressure to make changes right now (although you likely <strong>will</strong> start making changes just by knowing what you spend and where.) "Budgeting" feels like a dirty word to a lot of people, but give it a shot. Lots of software (and even some banks) will go through your statements and categorize it, but if you've tried this in the past I recommend manually logging transactions.</p>
+            </div>
+            <div class="champion-quote">"Strategy is the key to victory. Trust me, I know." - Swain</div>
+        </div>
 
-        <section class="concept">
-            <h2>Investments: Building Your Character</h2>
-            <p>[Your explanation using RPG character building as an analogy for investing]</p>
-        </section>
+        <div class="step">
+            <div class="step-title">
+                <img src="/api/placeholder/40/40" alt="Shield icon" class="step-icon">
+                Step 1: Ward (Build Emergency Fund)
+            </div>
+            <p>Warding is your emergency fund. If you have $80,000 in student debt, $22,400 more on credit cards, and $8,200 in medical bills, doesn't matter. You gotta ward first.</p>
+            <a href="#emergency-fund-calculator" class="action-button">Calculate Your Emergency Fund</a>
+            <div class="more-info-toggle">⚔️ Show More</div>
+            <div class="more-info">
+                <p>If you're in lane as the junglers finish their clears, if you're pushing inhibs at 25:00, if you're setting up for a sneaky Baron, it doesn't matter. You gotta ward. Everybody knows it, nobody does it as much as they should. Wards aren't fun. They cost gold and time, the opponents always find and destroy them, and you can't even have multiple pinks out anymore (hold on, i'm hearing in my ear that this has been the case since season 4 and i am a thousand years old.)</p>
+                <p>But you know what happens without vision. I know you don't want to ward. I know there are cooler uses for that gold, and focusing on consistent wards delays you getting that Warmogs seemingly forever. But you know what puts you a lot further from the Warmogs? Spending 48 seconds looking at a black and white screen.</p>
+                <p>After getting a roof over your head and other necessities (including what you need to work), focus on building up your emergency fund. Get to the point that if you lose your job or your transportation breaks down, you aren't going to go into further debt while you recover. Think about how much you would spend in a month if you stopped making money. You'd be able to cut back on buying battle passes, but you can't really pay less rent or make a smaller car payment. You want to save somewhere between three and six months of expenses.</p>
+            </div>
+            <div class="champion-quote">"Prepare for the future. It comes soon enough." - Heimerdinger</div>
+        </div>
 
-        <section class="concept">
-            <h2>Retirement Accounts: Nasus vs Olaf</h2>
-            <p>[Your explanation using League of Legends characters to explain Roth IRA vs Traditional 401k]</p>
-        </section>
+        <div class="step">
+            <div class="step-title">
+                <img src="/api/placeholder/40/40" alt="Broken chain icon" class="step-icon">
+                Step 2: Clear High-Interest Debt
+            </div>
+            <p>Trying to financially succeed without tackling high-interest debt is like trying to push a lane with your inhibitor down.</p>
+            <a href="#debt-payoff-strategy" class="action-button">Develop Debt Payoff Strategy</a>
+            <div class="more-info-toggle">⚔️ Show More</div>
+            <div class="more-info">
+                <p>On the rift, everyone starts out at the same level with the same amount of gold. In life, well, as Blitzcrank would say… "HA HA HA HA HA HA." Life's unfair! But it's the only game in town, so let's figure out where to start.</p>
+                <p>Some people spawn at max level with 15000 gold, some start out with their tier 3 tower under attack–and some folks have it even worse! In step 1, I mentioned that the emergency fund was more important than paying off debt, and I mean it! You can't pay down your debts if you can't get to work. But once you've got a little cushion in place, we can start to pay that debt down.</p>
+            </div>
+            <div class="champion-quote">"The past is a tapestry of lessons. Learn from it, but do not let it bind you." - Karma</div>
+        </div>
 
-        <section class="concept">
-            <h2>Debt Management: Clearing Debuffs</h2>
-            <p>[Your explanation using MMORPG debuffs as an analogy for managing debt]</p>
-        </section>
+    </div>
 
-        <section class="concept">
-            <h2>Budgeting: Resource Management</h2>
-            <p>[Your explanation using strategy game resource management as an analogy for budgeting]</p>
-        </section>
-    </main>
-
-    <footer>
-        <p>Disclaimer: This content is for educational purposes only and not financial advice. Consult with a financial professional for personalized advice.</p>
-    </footer>
+    <script>
+        document.querySelectorAll('.more-info-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const moreInfo = this.nextElementSibling;
+                if (moreInfo.style.display === 'none' || moreInfo.style.display === '') {
+                    moreInfo.style.display = 'block';
+                    this.textContent = '🛡️ Show Less';
+                } else {
+                    moreInfo.style.display = 'none';
+                    this.textContent = '⚔️ Show More';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
