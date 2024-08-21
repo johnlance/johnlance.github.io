@@ -3,218 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Summoner's Rift: The Ultimate 6-Step Quest</title>
-    <link href="https://fonts.googleapis.com/css2?family=Beaufort+for+LOL:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #0A1428;
-            --secondary: #091428;
-            --accent: #C8AA6E;
-            --text: #F0E6D2;
-            --highlight: #785A28;
-        }
-        body {
-            font-family: 'Beaufort for LOL', serif;
-            line-height: 1.6;
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            background-color: var(--primary);
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: rgba(10, 20, 40, 0.8);
-            border: 2px solid var(--accent);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(200, 170, 110, 0.5);
-        }
-        h1, h2 {
-            color: var(--accent);
-            text-transform: uppercase;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        .step {
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: rgba(9, 20, 40, 0.7);
-            border: 1px solid var(--highlight);
-            border-radius: 5px;
-        }
-        .step-title {
-            font-size: 1.2em;
-            color: var(--accent);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-        .step-icon {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-        }
-        .champion-quote {
-            font-style: italic;
-            color: #A09B8C;
-            margin-top: 10px;
-        }
-        .action-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: var(--highlight);
-            color: var(--text);
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-        .action-button:hover {
-            background-color: var(--accent);
-            color: var(--primary);
-        }
-        .more-info {
-            display: none;
-            margin-top: 15px;
-            padding: 10px;
-            background-color: rgba(200, 170, 110, 0.1);
-            border-radius: 5px;
-        }
-        .more-info-toggle {
-            cursor: pointer;
-            color: var(--accent);
-            text-decoration: none;
-            display: inline-block;
-            padding: 5px 10px;
-            border: 1px solid var(--accent);
-            border-radius: 5px;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-        }
-        .more-info-toggle:hover {
-            background-color: var(--accent);
-            color: var(--primary);
-        }
-    </style>
+    <title>MTG Card Price Tracker</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Financial Summoner's Rift: The Ultimate 6-Step Quest</h1>
-        
-        <p>Welcome to the Rift, Summoner! As we journey through this tortured metaphor, you'll find yourself getting familiar with everything you need to know to make your way toward financial stability. Already stable? Don't worry, there are some treats for you in here too. Without further ado, let's jump into our game!</p>
+    <header>
+        <h1>Magic: The Gathering Card Price Tracker</h1>
+    </header>
 
-        <div class="step">
-            <div class="step-title">
-                <img src="/api/placeholder/40/40" alt="Rune icon" class="step-icon">
-                Step 0: Select Your Runes (Make a Budget)
-            </div>
-            <p>If you don't know where you're going, you can't get there. If you load in with Draven runes but you're playing Yuumi, you're not going to have a good time.</p>
-            <a href="#budget-tool" class="action-button">Create Your Budget</a>
-            <div class="more-info-toggle">⚔️ Show More</div>
-            <div class="more-info">
-                <p>"Making a budget is boring!" Yeah. Sorry. A lot of this is boring. It's funny and there are some great jokes, but this is boring. If you want to go through life as PtA Yuumi, close this page. If you want to look at your bank account without grimacing someday, make a budget.</p>
-                <p>All you have to do at first is track your spending. Don't feel any pressure to make changes right now (although you likely <strong>will</strong> start making changes just by knowing what you spend and where.) "Budgeting" feels like a dirty word to a lot of people, but give it a shot. Lots of software (and even some banks) will go through your statements and categorize it, but if you've tried this in the past I recommend manually logging transactions.</p>
-            </div>
-            <div class="champion-quote">"Strategy is the key to victory. Trust me, I know." - Swain</div>
-        </div>
+    <main>
+        <section id="card-input">
+            <h2>Add a Card to Track</h2>
+            <form id="add-card-form">
+                <label for="card-name">Card Name:</label>
+                <input type="text" id="card-name" name="card-name" required>
 
-        <div class="step">
-            <div class="step-title">
-                <img src="/api/placeholder/40/40" alt="Ward icon" class="step-icon">
-                Step 1: Ward the Map (Build Emergency Fund)
-            </div>
-            <p>Warding is your emergency fund. If you have $80,000 in student debt, $22,400 more on credit cards, and $8,200 in medical bills, doesn't matter. You gotta ward first.</p>
-            <a href="#emergency-fund-calculator" class="action-button">Calculate Your Emergency Fund</a>
-            <div class="more-info-toggle">⚔️ Show More</div>
-            <div class="more-info">
-                <p>If you're in lane as the junglers finish their clears, if you're pushing inhibs at 25:00, if you're setting up for a sneaky Baron, it doesn't matter. You gotta ward. Everybody knows it, nobody does it as much as they should. Wards aren't fun. They cost gold and time, the opponents always find and destroy them, and you can't even have multiple pinks out anymore (hold on, i'm hearing in my ear that this has been the case since season 4 and i am a thousand years old.)</p>
-                <p>But you know what happens without vision. I know you don't want to ward. I know there are cooler uses for that gold, and focusing on consistent wards delays you getting that Warmogs seemingly forever. But you know what puts you a lot further from the Warmogs? Spending 48 seconds looking at a black and white screen.</p>
-                <p>After getting a roof over your head and other necessities (including what you need to work), focus on building up your emergency fund. Get to the point that if you lose your job or your transportation breaks down, you aren't going to go into further debt while you recover. Think about how much you would spend in a month if you stopped making money. You'd be able to cut back on buying battle passes, but you can't really pay less rent or make a smaller car payment. You want to save somewhere between three and six months of expenses.</p>
-            </div>
-            <div class="champion-quote">"The key to immortality? Not dying." - Zilean</div>
-        </div>
+                <label for="current-price">Current Price ($) (Optional):</label>
+                <input type="number" id="current-price" name="current-price" step="0.01" min="0">
 
-        <div class="step">
-            <div class="step-title">
-                <img src="/api/placeholder/40/40" alt="Broken chain icon" class="step-icon">
-                Step 2: Defeat the Debt Dragon (Clear High-Interest Debt)
-            </div>
-            <p>Trying to financially succeed without tackling high-interest debt is like trying to push a lane with your inhibitor down.</p>
-            <a href="#debt-payoff-strategy" class="action-button">Develop Debt Payoff Strategy</a>
-            <div class="more-info-toggle">⚔️ Show More</div>
-            <div class="more-info">
-                <p>On the rift, everyone starts out at the same level with the same amount of gold. In life, well, as Blitzcrank would say… "HA HA HA HA HA HA." Life's unfair! But it's the only game in town, so let's figure out where to start.</p>
-                <p>Some people spawn at max level with 15000 gold, some start out with their tier 3 tower under attack–and some folks have it even worse! In step 1, I mentioned that the emergency fund was more important than paying off debt, and I mean it! You can't pay down your debts if you can't get to work. But once you've got a little cushion in place, we can start to pay that debt down.</p>
-            </div>
-            <div class="champion-quote">"The past is a tapestry of lessons. Learn from it, but do not let it bind you." - Karma</div>
-        </div>
+                <label for="target-increase">Target Price Increase (%) (Optional, for automated alerts):</label>
+                <input type="number" id="target-increase" name="target-increase" min="0">
 
-        <div class="step">
-            <div class="step-title">
-                <img src="/api/placeholder/40/40" alt="Nexus icon" class="step-icon">
-                Step 3: Power Up Your Nexus (Retirement Savings)
-            </div>
-            <p>Your retirement fund is your financial Nexus. Protect it, nurture it, and watch it become an unstoppable force in your golden years.</p>
-            <a href="#retirement-calculator" class="action-button">Plan Your Retirement</a>
-            <div class="more-info-toggle">⚔️ Show More</div>
-            <div class="more-info">
-                <p>Think of retirement savings as your late-game insurance. You wouldn't enter a 40-minute game without considering your build path, would you? Similarly, you shouldn't go through your career without planning for retirement.</p>
-                <p>Start by maximizing any employer match on retirement accounts - it's like free gold! Then, consider maxing out tax-advantaged accounts like 401(k)s and IRAs. Remember, the earlier you start, the more time your money has to grow, just like how early game advantages can snowball into late-game dominance.</p>
-            </div>
-            <div class="champion-quote">"The future will be decided by our actions today." - Jayce</div>
-        </div>
+                <button type="submit">Add Card</button>
+            </form>
+        </section>
 
-        <div class="step">
-            <div class="step-title">
-                <img src="/api/placeholder/40/40" alt="Item set icon" class="step-icon">
-                Step 4: Diversify Your Item Set (Invest Wisely)
-            </div>
-            <p>A well-rounded champion build is key to victory. Similarly, a diverse investment portfolio is crucial for long-term financial success.</p>
-            <a href="#investment-strategies" class="action-button">Explore Investment Strategies</a>
-            <div class="more-info-toggle">⚔️ Show More</div>
-            <div class="more-info">
-                <p>Investing is like building your champion's defenses. You wouldn't stack only armor against a team with mixed damage, right? Just as you need both armor and magic resistance to protect against different types of threats, you need a mix of investments to guard against various market conditions.</p>
-                <p>Consider a diverse portfolio like a well-rounded item build:</p>
-                <ul>
-                    <li>Stocks: Your Infinity Edge. High risk, high potential reward.</li>
-                    <li>Bonds: Your Thornmail. More defensive, offers steady returns.</li>
-                    <li>Real Estate: Your Warmog's Armor. Slow, steady growth that compounds over time.</li>
-                    <li>Cash/Savings: Your Refillable Potion. Not the most exciting, but provides liquidity when you need it.</li>
-                </ul>
-                <p>As you get closer to your financial goals (late game), you might want to shift to a more defensive strategy. Just like how you might prioritize Guardian Angel when protecting your nexus in the final push.</p>
-                <p><strong>Disclaimer:</strong> Remember, Summoner, while I'm happy to share these analogies, I'm not a certified financial advisor (more like a helpful ward bot). For real investment advice, consult with a professional who can analyze your specific situation. Don't make major financial decisions based solely on gaming metaphors, no matter how clever they are!</p>
-            </div>
-            <div class="champion-quote">"Balance in all things." - Irelia</div>
-        </div>
+        <section id="tracked-cards">
+            <h2>Tracked Cards</h2>
+            <table id="card-list">
+                <thead>
+                    <tr>
+                        <th>Card Name</th>
+                        <th>Purchase Price</th>
+                        <th>Current Price</th>
+                        <th>Price Change</th>
+                        <th>Target Increase</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Card rows will be dynamically added here -->
+                </tbody>
+            </table>
+        </section>
 
-        <div class="step">
-            <div class="step-title">
-                <img src="/api/placeholder/40/40" alt="Champion mastery icon" class="step-icon">
-                Step 5: Achieve Legendary Status (Advanced Strategies)
+        <section id="notifications">
+            <h2>Price Alerts</h2>
+            <button id="test-alert-btn">Test Alert</button>
+            <div id="alert-list">
+                <!-- Alerts will be dynamically added here -->
             </div>
-            <p>You've mastered the basics, now it's time to truly shine. These advanced techniques will elevate your financial game to Challenger tier.</p>
-            <a href="#advanced-finance" class="action-button">Unlock Legendary Financial Tactics</a>
-            <div class="more-info-toggle">⚔️ Show More</div>
-            <div class="more-info">
-                <p>This is where you fine-tune your financial build for maximum efficiency. Consider advanced strategies like tax-loss harvesting, real estate investing, or starting a side business. Remember, the path to financial freedom is like climbing the ranked ladder - it takes time, dedication, and continuous learning.</p>
-            </div>
-            <div class="champion-quote">"There is no limit to what I can accomplish." - Viktor</div>
-        </div>
+        </section>
+    </main>
 
-    </div>
+    <footer>
+        <p>&copy; 2024 MTG Card Price Tracker</p>
+    </footer>
 
-    <script>
-        document.querySelectorAll('.more-info-toggle').forEach(toggle => {
-            toggle.addEventListener('click', function() {
-                const moreInfo = this.nextElementSibling;
-                if (moreInfo.style.display === 'none' || moreInfo.style.display === '') {
-                    moreInfo.style.display = 'block';
-                    this.textContent = '🛡️ Show Less';
-                } else {
-                    moreInfo.style.display = 'none';
-                    this.textContent = '⚔️ Show More';
-                }
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
