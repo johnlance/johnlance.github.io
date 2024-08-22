@@ -63,6 +63,7 @@ async function fetchCardData(cardName) {
 
 // Add a new card
 function addCard(name, purchasePrice, targetIncrease, currentPrice, imageUri, quantity) {
+    console.log('Adding card:', { name, purchasePrice, targetIncrease, currentPrice, imageUri, quantity });
     const finalName = name; // The name is already the selected or typed value
 
     const card = {
@@ -77,6 +78,7 @@ function addCard(name, purchasePrice, targetIncrease, currentPrice, imageUri, qu
     };
     cards.push(card);
     saveCards();
+    console.log('Card added successfully. Total cards:', cards.length);
 }
 
 // Save cards to local storage
