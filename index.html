@@ -1,79 +1,284 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic: The Gathering Card Price Tracker</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.css" />
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js" async></script>
-    <script src="script.js" defer></script>
+    <title>PAO Memory Practice</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+            background: #f5f5f5;
+        }
+        .challenge {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        .item {
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #2563eb;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 10px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        button.secondary {
+            background: #4b5563;
+        }
+        button.secondary:hover {
+            background: #374151;
+        }
+        input {
+            padding: 8px;
+            font-size: 1em;
+            width: 120px;
+            margin: 10px;
+            text-align: center;
+        }
+        .result {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .correct { color: #16a34a; }
+        .incorrect { color: #dc2626; }
+        .mode-select {
+            margin-bottom: 20px;
+        }
+        .number-display {
+            font-size: 2em;
+            font-family: monospace;
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+        .pao-reveal {
+            background: #f3f4f6;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .pao-reveal:hover {
+            background: #e5e7eb;
+        }
+        .hidden {
+            display: none;
+        }
+        select {
+            padding: 8px;
+            font-size: 1em;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Magic: The Gathering Card Price Tracker</h1>
-    </header>
+    <h1>PAO Memory Practice</h1>
     
-    <main role="main">
-        <div class="container">
-            <div class="left-column">
-                <div id="card-input">
-                    <h2>Add a Card to Track</h2>
-                    <form id="add-card-form">
-                        <input type="text" id="card-name" placeholder="Card Name" required>
-                        <input type="number" id="current-price" placeholder="Current Price ($) (Optional)" step="0.01">
-                        <input type="number" id="quantity" placeholder="Quantity" value="1" min="1" required>
-                        <input type="number" id="target-increase" placeholder="Target Price Increase (%) (Optional)" step="0.01">
-                        <button type="submit">Add Card</button>
-                    </form>
-                </div>
-
-                <div id="tracked-cards">
-                    <h2>Tracked Cards</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Card Image</th>
-                                <th>Card Name</th>
-                                <th>Purchase Price</th>
-                                <th>Current Price</th>
-                                <th>Quantity</th>
-                                <th>Total Value</th>
-                                <th>Price Change</th>
-                                <th>Target Increase</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="card-list"></tbody>
-                    </table>
-                </div>
-
-                <div id="update-info">
-                    <div id="last-update">Last Pricing Update: <span></span></div>
-                    <div id="next-update">Next Pricing Update: <span></span></div>
-                    <div>
-                        Update Interval (minutes):
-                        <input type="number" id="update-interval" min="1" value="60">
-                        <button id="set-interval">Set</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="right-column">
-                <div id="notifications">
-                    <h2>Price Alerts</h2>
-                    <div id="alert-list"></div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        © 2024 MTG Card Price Tracker
-    </footer>
-
-    <div id="loading-overlay" style="display: none;">
-        <div class="spinner"></div>
+    <div class="mode-select">
+        <button onclick="switchMode('pao')" id="paoModeBtn">PAO → Number Mode</button>
+        <button onclick="switchMode('number')" id="numberModeBtn">Number → PAO Mode</button>
     </div>
+
+    <!-- PAO to Number Mode -->
+    <div id="paoMode">
+        <div class="challenge">
+            <div class="item" id="person"></div>
+            <div class="item" id="action"></div>
+            <div class="item" id="object"></div>
+        </div>
+        <div>
+            <input type="text" id="answer" placeholder="Enter number" maxlength="6">
+            <button onclick="checkAnswer()">Check</button>
+        </div>
+        <button onclick="newChallenge()">New Challenge</button>
+        <div id="result" class="result"></div>
+    </div>
+
+    <!-- Number to PAO Mode -->
+    <div id="numberMode" class="hidden">
+        <div>
+            <select id="digitCount">
+                <option value="6">6 digits (1 group)</option>
+                <option value="12">12 digits (2 groups)</option>
+                <option value="18">18 digits (3 groups)</option>
+                <option value="24">24 digits (4 groups)</option>
+            </select>
+        </div>
+        <button onclick="generateNumber()">Generate Number</button>
+        <div class="number-display" id="numberDisplay"></div>
+        <div id="paoRevealContainer"></div>
+    </div>
+
+    <script>
+        const paoSystem = {
+            "00": { person: "Owl", action: "Hooting", object: "Moon" },
+            "01": { person: "Magician", action: "Pulling", object: "Wand" },
+            "02": { person: "Ice Skater", action: "Spinning", object: "Ice Rink" },
+            "03": { person: "Chef", action: "Flipping", object: "Pancake" },
+            "04": { person: "Viking", action: "Raiding", object: "Shield" },
+            "05": { person: "Cobra", action: "Biting", object: "Apple" },
+            "06": { person: "Firefighter", action: "Spraying", object: "Hose" },
+            "07": { person: "Tiger Woods", action: "Swinging", object: "Golf Club" },
+            "08": { person: "Olaf", action: "Melting", object: "Carrot" },
+            "09": { person: "Clown", action: "Inflating", object: "Balloon" },
+            "10": { person: "Lionel Messi", action: "Kicking", object: "Soccer Ball" },
+            "11": { person: "Winklevoss Twins", action: "Rowing", object: "Boat" },
+            "12": { person: "Tom Brady", action: "Throwing", object: "Football" },
+            "13": { person: "Taylor Swift", action: "Shaking", object: "Microphone" },
+            "14": { person: "Cupid", action: "Shooting Arrow", object: "Heart" },
+            "15": { person: "Rosie Riveter", action: "Riveting", object: "Airplane Panel" },
+            "16": { person: "Abraham Lincoln", action: "Signing", object: "Proclamation" },
+            "17": { person: "Bob Ross", action: "Painting", object: "Happy Tree" },
+            "18": { person: "Rory Gilmore", action: "Tossing", object: "Graduation Cap" },
+            "19": { person: "Indiana Jones", action: "Cracking a whip at", object: "Bullwhip" },
+            "20": { person: "Michael Phelps", action: "Swimming", object: "Gold Medal" },
+            "21": { person: "Dealer", action: "Shuffling cards", object: "Cards" },
+            "22": { person: "Wonder Woman", action: "Blocking with bracelets", object: "Bullets" },
+            "23": { person: "Michael Jordan", action: "Slam dunking", object: "Basketball" },
+            "24": { person: "Kermit", action: "Sipping", object: "Tea" },
+            "25": { person: "Thanos", action: "Snapping", object: "Gauntlet" },
+            "26": { person: "David Copperfield", action: "Making Disappear", object: "Statue of Liberty" },
+            "27": { person: "Kurt Cobain", action: "Smashing", object: "Guitar" },
+            "28": { person: "Dick Van Dyke", action: "Tripping", object: "Ottoman" },
+            "29": { person: "Neil Armstrong", action: "Planting", object: "Flag" },
+            "30": { person: "Atlas", action: "supporting on shoulders", object: "Earth" },
+            "31": { person: "Mr. Rogers", action: "Changing clothes", object: "Sweater" },
+            "32": { person: "Bugs Bunny", action: "chewing on", object: "Carrot" },
+            "33": { person: "Jesus", action: "Healing", object: "Blind Man" },
+            "34": { person: "Raphael", action: "Painting", object: "Sistine Chapel" },
+            "35": { person: "King Kong", action: "Climbing", object: "Empire State" },
+            "36": { person: "Simone Biles", action: "Twisting", object: "Balance Beam" },
+            "37": { person: "Leonardo da Vinci", action: "Sketching", object: "Vitruvian Man" },
+            "38": { person: "Sherlock Holmes", action: "Examining", object: "Magnifying Glass" },
+            "39": { person: "Elise", action: "Catching in a web", object: "Web" },
+            "40": { person: "Noah", action: "Building", object: "Ark" },
+            "41": { person: "Merlin", action: "Transforming", object: "Dragon" },
+            "42": { person: "Jackie Robinson", action: "sliding", object: "Base" },
+            "43": { person: "Bruce Lee", action: "karate chop", object: "Nunchucks" },
+            "44": { person: "Obama", action: "Speaking", object: "Podium" },
+            "45": { person: "Trump", action: "Tweeting", object: "Phone" },
+            "46": { person: "Marilyn Monroe", action: "pushing dress back down", object: "Dress" },
+            "47": { person: "Armstrong", action: "Trumpeting", object: "Horn" },
+            "48": { person: "Muhammad Ali", action: "Floating", object: "Butterfly" },
+            "49": { person: "Edison", action: "electrifying", object: "Light Bulb" }
+        };
+
+        let currentChallenge;
+        let currentMode = 'pao';
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('paoMode').classList.toggle('hidden', mode !== 'pao');
+            document.getElementById('numberMode').classList.toggle('hidden', mode !== 'number');
+            document.getElementById('paoModeBtn').style.opacity = mode === 'pao' ? '0.5' : '1';
+            document.getElementById('numberModeBtn').style.opacity = mode === 'number' ? '0.5' : '1';
+            if (mode === 'pao') {
+                newChallenge();
+            } else {
+                generateNumber();
+            }
+        }
+
+        function getRandomNumber() {
+            return Math.floor(Math.random() * 50).toString().padStart(2, '0');
+        }
+
+        function newChallenge() {
+            const num1 = getRandomNumber();
+            const num2 = getRandomNumber();
+            const num3 = getRandomNumber();
+            
+            document.getElementById('person').textContent = paoSystem[num1].person;
+            document.getElementById('action').textContent = paoSystem[num2].action;
+            document.getElementById('object').textContent = paoSystem[num3].object;
+            
+            currentChallenge = num1 + num2 + num3;
+            document.getElementById('answer').value = '';
+            document.getElementById('result').textContent = '';
+            document.getElementById('answer').focus();
+        }
+
+        function checkAnswer() {
+            const answer = document.getElementById('answer').value;
+            const result = document.getElementById('result');
+            
+            if (answer === currentChallenge) {
+                result.textContent = 'Correct! 🎉';
+                result.className = 'result correct';
+            } else {
+                result.textContent = `Incorrect. The answer was ${currentChallenge}`;
+                result.className = 'result incorrect';
+            }
+        }
+
+        function generateNumber() {
+            const digitCount = parseInt(document.getElementById('digitCount').value);
+            let number = '';
+            const groups = [];
+            
+            for (let i = 0; i < digitCount; i += 2) {
+                number += getRandomNumber();
+            }
+            
+            // Split into groups of 6
+            for (let i = 0; i < number.length; i += 6) {
+                groups.push(number.slice(i, i + 6));
+            }
+            
+            document.getElementById('numberDisplay').textContent = groups.join(' ');
+            
+            // Create reveal buttons for each group
+            const container = document.getElementById('paoRevealContainer');
+            container.innerHTML = '';
+            
+            groups.forEach((group, index) => {
+                const div = document.createElement('div');
+                div.className = 'pao-reveal';
+                div.setAttribute('data-revealed', 'false');
+                div.textContent = `Click to reveal PAO for ${group}`;
+                
+                div.onclick = function() {
+                    if (this.getAttribute('data-revealed') === 'false') {
+                        const pao1 = paoSystem[group.slice(0,2)];
+                        const pao2 = paoSystem[group.slice(2,4)];
+                        const pao3 = paoSystem[group.slice(4,6)];
+                        
+                        this.innerHTML = `
+                            <strong>Person:</strong> ${pao1.person}<br>
+                            <strong>Action:</strong> ${pao2.action}<br>
+                            <strong>Object:</strong> ${pao3.object}
+                        `;
+                        this.setAttribute('data-revealed', 'true');
+                    }
+                };
+                
+                container.appendChild(div);
+            });
+        }
+
+        // Handle Enter key
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Start with a challenge
+        newChallenge();
+    </script>
 </body>
 </html>
