@@ -83,17 +83,66 @@
             font-size: 1em;
             margin: 10px;
         }
+        .csv-input {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .csv-input p {
+            margin: 10px 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+        #csvFile {
+            margin: 10px 0;
+        }
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            max-width: 400px;
+            width: 90%;
+        }
+        .modal-content {
+            text-align: left;
+            margin: 15px 0;
+            white-space: pre-line;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
     <h1>PAO Memory Practice</h1>
     
+    <div class="csv-input">
+        <h3>Load Custom PAO System</h3>
+        <p>CSV format: number,person,action,object</p>
+        <p>Example: 00,Owl,Hooting,Moon</p>
+        <input type="file" id="csvFile" accept=".csv">
+        <button onclick="loadCSV()">Load PAO System</button>
+    </div>
+
     <div class="mode-select">
         <button onclick="switchMode('pao')" id="paoModeBtn">PAO → Number Mode</button>
         <button onclick="switchMode('number')" id="numberModeBtn">Number → PAO Mode</button>
     </div>
 
-    <!-- PAO to Number Mode -->
     <div id="paoMode">
         <div class="challenge">
             <div class="item" id="person"></div>
@@ -108,7 +157,6 @@
         <div id="result" class="result"></div>
     </div>
 
-    <!-- Number to PAO Mode -->
     <div id="numberMode" class="hidden">
         <div>
             <select id="digitCount">
@@ -123,62 +171,82 @@
         <div id="paoRevealContainer"></div>
     </div>
 
-    <script>
-        const paoSystem = {
-            "00": { person: "Owl", action: "Hooting", object: "Moon" },
-            "01": { person: "Magician", action: "Pulling", object: "Wand" },
-            "02": { person: "Ice Skater", action: "Spinning", object: "Ice Rink" },
-            "03": { person: "Chef", action: "Flipping", object: "Pancake" },
-            "04": { person: "Viking", action: "Raiding", object: "Shield" },
-            "05": { person: "Cobra", action: "Biting", object: "Apple" },
-            "06": { person: "Firefighter", action: "Spraying", object: "Hose" },
-            "07": { person: "Tiger Woods", action: "Swinging", object: "Golf Club" },
-            "08": { person: "Olaf", action: "Melting", object: "Carrot" },
-            "09": { person: "Clown", action: "Inflating", object: "Balloon" },
-            "10": { person: "Lionel Messi", action: "Kicking", object: "Soccer Ball" },
-            "11": { person: "Winklevoss Twins", action: "Rowing", object: "Boat" },
-            "12": { person: "Tom Brady", action: "Throwing", object: "Football" },
-            "13": { person: "Taylor Swift", action: "Shaking", object: "Microphone" },
-            "14": { person: "Cupid", action: "Shooting Arrow", object: "Heart" },
-            "15": { person: "Rosie Riveter", action: "Riveting", object: "Airplane Panel" },
-            "16": { person: "Abraham Lincoln", action: "Signing", object: "Proclamation" },
-            "17": { person: "Bob Ross", action: "Painting", object: "Happy Tree" },
-            "18": { person: "Rory Gilmore", action: "Tossing", object: "Graduation Cap" },
-            "19": { person: "Indiana Jones", action: "Cracking a whip at", object: "Bullwhip" },
-            "20": { person: "Michael Phelps", action: "Swimming", object: "Gold Medal" },
-            "21": { person: "Dealer", action: "Shuffling cards", object: "Cards" },
-            "22": { person: "Wonder Woman", action: "Blocking with bracelets", object: "Bullets" },
-            "23": { person: "Michael Jordan", action: "Slam dunking", object: "Basketball" },
-            "24": { person: "Kermit", action: "Sipping", object: "Tea" },
-            "25": { person: "Thanos", action: "Snapping", object: "Gauntlet" },
-            "26": { person: "David Copperfield", action: "Making Disappear", object: "Statue of Liberty" },
-            "27": { person: "Kurt Cobain", action: "Smashing", object: "Guitar" },
-            "28": { person: "Dick Van Dyke", action: "Tripping", object: "Ottoman" },
-            "29": { person: "Neil Armstrong", action: "Planting", object: "Flag" },
-            "30": { person: "Atlas", action: "supporting on shoulders", object: "Earth" },
-            "31": { person: "Mr. Rogers", action: "Changing clothes", object: "Sweater" },
-            "32": { person: "Bugs Bunny", action: "chewing on", object: "Carrot" },
-            "33": { person: "Jesus", action: "Healing", object: "Blind Man" },
-            "34": { person: "Raphael", action: "Painting", object: "Sistine Chapel" },
-            "35": { person: "King Kong", action: "Climbing", object: "Empire State" },
-            "36": { person: "Simone Biles", action: "Twisting", object: "Balance Beam" },
-            "37": { person: "Leonardo da Vinci", action: "Sketching", object: "Vitruvian Man" },
-            "38": { person: "Sherlock Holmes", action: "Examining", object: "Magnifying Glass" },
-            "39": { person: "Elise", action: "Catching in a web", object: "Web" },
-            "40": { person: "Noah", action: "Building", object: "Ark" },
-            "41": { person: "Merlin", action: "Transforming", object: "Dragon" },
-            "42": { person: "Jackie Robinson", action: "sliding", object: "Base" },
-            "43": { person: "Bruce Lee", action: "karate chop", object: "Nunchucks" },
-            "44": { person: "Obama", action: "Speaking", object: "Podium" },
-            "45": { person: "Trump", action: "Tweeting", object: "Phone" },
-            "46": { person: "Marilyn Monroe", action: "pushing dress back down", object: "Dress" },
-            "47": { person: "Armstrong", action: "Trumpeting", object: "Horn" },
-            "48": { person: "Muhammad Ali", action: "Floating", object: "Butterfly" },
-            "49": { person: "Edison", action: "electrifying", object: "Light Bulb" }
-        };
+    <div id="confirmationModal" class="modal hidden">
+        <h3>PAO System Updated</h3>
+        <div id="modalContent" class="modal-content"></div>
+        <button onclick="closeModal()">OK</button>
+    </div>
+    <div id="modalOverlay" class="modal-overlay hidden" onclick="closeModal()"></div>
 
+    <script>
+        const paoSystem = {};
         let currentChallenge;
         let currentMode = 'pao';
+
+        function showModal(content) {
+            document.getElementById('modalContent').textContent = content;
+            document.getElementById('confirmationModal').classList.remove('hidden');
+            document.getElementById('modalOverlay').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmationModal').classList.add('hidden');
+            document.getElementById('modalOverlay').classList.add('hidden');
+        }
+
+        function getRandomNumber() {
+            const size = Math.min(100, Object.keys(paoSystem).length);
+            return Math.floor(Math.random() * size).toString().padStart(2, '0');
+        }
+
+        function loadCSV() {
+            const file = document.getElementById('csvFile').files[0];
+            if (!file) {
+                alert('Please select a CSV file');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n');
+                const newPaoSystem = {};
+
+                for (let line of lines) {
+                    line = line.trim();
+                    if (!line) continue;
+                    
+                    const [number, person, action, object] = line.split(',').map(x => x.trim());
+                    if (number && person && action && object) {
+                        newPaoSystem[number] = { person, action, object };
+                    }
+                }
+
+                if (Object.keys(newPaoSystem).length < 3) {
+                    alert('CSV must contain at least 3 PAO entries');
+                    return;
+                }
+
+                Object.assign(paoSystem, newPaoSystem);
+                
+                const entries = Object.entries(newPaoSystem);
+                const sample = entries.slice(0, 3);
+                const message = `System successfully updated with ${Object.keys(newPaoSystem).length} entries!\n\n` +
+                    `Here's a sample from your new system:\n\n` +
+                    sample.map(([num, {person, action, object}]) => 
+                        `${num}: ${person} ${action} ${object}`
+                    ).join('\n');
+                
+                showModal(message);
+                
+                if (currentMode === 'pao') {
+                    newChallenge();
+                } else {
+                    generateNumber();
+                }
+            };
+            reader.readAsText(file);
+        }
 
         function switchMode(mode) {
             currentMode = mode;
@@ -191,10 +259,6 @@
             } else {
                 generateNumber();
             }
-        }
-
-        function getRandomNumber() {
-            return Math.floor(Math.random() * 50).toString().padStart(2, '0');
         }
 
         function newChallenge() {
@@ -213,7 +277,7 @@
         }
 
         function checkAnswer() {
-            const answer = document.getElementById('answer').value;
+            const answer = document.getElementById('answer').value.padStart(6, '0');
             const result = document.getElementById('result');
             
             if (answer === currentChallenge) {
@@ -234,14 +298,12 @@
                 number += getRandomNumber();
             }
             
-            // Split into groups of 6
             for (let i = 0; i < number.length; i += 6) {
                 groups.push(number.slice(i, i + 6));
             }
             
             document.getElementById('numberDisplay').textContent = groups.join(' ');
             
-            // Create reveal buttons for each group
             const container = document.getElementById('paoRevealContainer');
             container.innerHTML = '';
             
@@ -270,15 +332,11 @@
             });
         }
 
-        // Handle Enter key
         document.getElementById('answer').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 checkAnswer();
             }
         });
-
-        // Start with a challenge
-        newChallenge();
     </script>
 </body>
 </html>
