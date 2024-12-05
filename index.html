@@ -1,7 +1,7 @@
-<!DOCTYPE html>
 <html>
 <head>
     <title>PAO Memory Practice</title>
+<!DOCTYPE html>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -332,9 +332,14 @@
             });
         }
 
-        document.getElementById('answer').addEventListener('keypress', function(e) {
+        document.getElementById('answer').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 checkAnswer();
+            } else if (e.key === '+' || e.key === '=') { // = key because + requires Shift
+                newChallenge();
+                e.preventDefault(); // Prevent the + from being typed in the input
+            }
+});
             }
         });
     </script>
