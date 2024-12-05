@@ -1,7 +1,7 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>PAO Memory Practice</title>
-<!DOCTYPE html>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -98,6 +98,54 @@
         #csvFile {
             margin: 10px 0;
         }
+        .shortcut-hint {
+            font-size: 0.8em;
+            color: #666;
+            margin-left: 5px;
+        }
+        .button-flash {
+            animation: flash 0.2s;
+        }
+        @keyframes flash {
+            0% { background-color: #2563eb; }
+            50% { background-color: #4338ca; }
+            100% { background-color: #2563eb; }
+        }
+        .input-flash {
+            animation: inputHighlight 0.3s;
+        }
+        @keyframes inputHighlight {
+            0% { background-color: #ffffff; }
+            50% { background-color: #f3f4f6; }
+            100% { background-color: #ffffff; }
+        }
+        .stats {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .history-item {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .stat-box {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+        }
         .modal {
             position: fixed;
             top: 50%;
@@ -128,7 +176,7 @@
     </style>
 </head>
 <body>
-    <h1>2-Digit PAO Memory Practice</h1>
+    <h1>PAO Memory Practice</h1>
     
     <div class="csv-input">
         <h3>Load Custom PAO System</h3>
@@ -144,6 +192,18 @@
     </div>
 
     <div id="paoMode">
+        <div class="stats">
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div>Attempted: <span id="totalCount">0</span></div>
+                    <div>Correct: <span id="correctCount">0</span></div>
+                    <div>Success Rate: <span id="successRate">0%</span></div>
+                </div>
+            </div>
+            <button onclick="resetStats()" class="secondary">Reset Stats</button>
+            <div id="history"></div>
+        </div>
+
         <div class="challenge">
             <div class="item" id="person"></div>
             <div class="item" id="action"></div>
@@ -151,9 +211,9 @@
         </div>
         <div>
             <input type="text" id="answer" placeholder="Enter number" maxlength="6">
-            <button onclick="checkAnswer()">Check</button>
+            <button id="checkButton" onclick="checkAnswer()">Check <span class="shortcut-hint">(Enter)</span></button>
         </div>
-        <button onclick="newChallenge()">New Challenge</button>
+        <button id="newChallengeButton" onclick="newChallenge()">New Challenge <span class="shortcut-hint">(+)</span></button>
         <div id="result" class="result"></div>
     </div>
 
@@ -182,6 +242,11 @@
         const paoSystem = {};
         let currentChallenge;
         let currentMode = 'pao';
+        let stats = {
+            total: 0,
+            correct: 0,
+            history: []
+        };
 
         function showModal(content) {
             document.getElementById('modalContent').textContent = content;
@@ -192,6 +257,67 @@
         function closeModal() {
             document.getElementById('confirmationModal').classList.add('hidden');
             document.getElementById('modalOverlay').classList.add('hidden');
+        }
+
+        function flashButton(buttonId) {
+            const button = document.getElementById(buttonId);
+            button.classList.add('button-flash');
+            setTimeout(() => button.classList.remove('button-flash'), 200);
+        }
+
+        function flashInput() {
+            const input = document.getElementById('answer');
+            input.classList.add('input-flash');
+            setTimeout(() => input.classList.remove('input-flash'), 300);
+        }
+
+        function updateStats(correct, pao, guess, actual) {
+            stats.total++;
+            if (correct) stats.correct++;
+            
+            stats.history.unshift({
+                pao,
+                guess,
+                actual,
+                correct
+            });
+            
+            if (stats.history.length > 5) {
+                stats.history.pop();
+            }
+            
+            document.getElementById('totalCount').textContent = stats.total;
+            document.getElementById('correctCount').textContent = stats.correct;
+            document.getElementById('successRate').textContent = 
+                `${((stats.correct / stats.total) * 100).toFixed(1)}%`;
+            
+            updateHistory();
+        }
+
+        function updateHistory() {
+            const history = document.getElementById('history');
+            history.innerHTML = stats.history.map(entry => `
+                <div class="history-item">
+                    <span style="color: ${entry.correct ? '#16a34a' : '#dc2626'}">
+                        ${entry.correct ? '✓' : '✗'}
+                    </span>
+                    ${entry.pao} →
+                    Your answer: ${entry.guess}
+                    ${!entry.correct ? `(Correct: ${entry.actual})` : ''}
+                </div>
+            `).join('');
+        }
+
+        function resetStats() {
+            stats = {
+                total: 0,
+                correct: 0,
+                history: []
+            };
+            document.getElementById('totalCount').textContent = '0';
+            document.getElementById('correctCount').textContent = '0';
+            document.getElementById('successRate').textContent = '0%';
+            document.getElementById('history').innerHTML = '';
         }
 
         function getRandomNumber() {
@@ -238,6 +364,7 @@
                     ).join('\n');
                 
                 showModal(message);
+                resetStats();
                 
                 if (currentMode === 'pao') {
                     newChallenge();
@@ -274,13 +401,21 @@
             document.getElementById('answer').value = '';
             document.getElementById('result').textContent = '';
             document.getElementById('answer').focus();
+            flashInput();
         }
 
         function checkAnswer() {
             const answer = document.getElementById('answer').value.padStart(6, '0');
             const result = document.getElementById('result');
+            const correct = answer === currentChallenge;
             
-            if (answer === currentChallenge) {
+            const paoString = `${paoSystem[currentChallenge.slice(0,2)].person} → ` +
+                            `${paoSystem[currentChallenge.slice(2,4)].action} → ` +
+                            `${paoSystem[currentChallenge.slice(4,6)].object}`;
+            
+            updateStats(correct, paoString, answer, currentChallenge);
+            
+            if (correct) {
                 result.textContent = 'Correct! 🎉';
                 result.className = 'result correct';
             } else {
@@ -334,12 +469,12 @@
 
         document.getElementById('answer').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
+                flashButton('checkButton');
                 checkAnswer();
-            } else if (e.key === '+' || e.key === '=') { // = key because + requires Shift
+            } else if (e.key === '+' || e.key === '=') {
+                flashButton('newChallengeButton');
                 newChallenge();
-                e.preventDefault(); // Prevent the + from being typed in the input
-            }
-});
+                e.preventDefault(); // Prevent the + from being typed
             }
         });
     </script>
