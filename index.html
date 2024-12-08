@@ -284,6 +284,16 @@
                 historyList.appendChild(historyItem);
             });
         }
+        function startPractice() {
+            if (paoList.length === 0) {
+                alert('No PAO data available to start the session!');
+                return;
+            }
+        
+            document.getElementById('remaining-items').style.display = 'block';
+            updateRemainingItems();
+            nextItem();
+        }
 
         function updateMetrics() {
             const totalAttempts = history.length;
