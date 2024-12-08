@@ -266,8 +266,35 @@
         }
 
         function loadDevPAOList() {
+            console.log("Dev Load clicked");
             paoList = [...devPAOList];
+            console.log("paoList after loading:", paoList);
             startPractice();
+        }
+        
+        function startPractice() {
+            if (paoList.length === 0) {
+                alert('No PAO data available to start the session!');
+                return;
+            }
+        
+            document.getElementById('remaining-items').style.display = 'block';
+            updateRemainingItems();
+            nextItem();
+        }
+        
+        function nextItem() {
+            if (paoList.length === 0) {
+                showFinalStats();
+                return;
+            }
+        
+            currentIndex = Math.floor(Math.random() * paoList.length);
+            document.getElementById('prompt-container').style.display = 'block';
+            document.getElementById('number-prompt').innerText = paoList[currentIndex].number;
+            startTime = new Date();
+            lockedElapsedTime = null;
+            updateAutoscoreInfo();
         }
 
         function updateHistory() {
