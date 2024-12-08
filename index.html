@@ -20,7 +20,7 @@
         }
         #history-container {
             margin-top: 20px;
-            max-height: 100px;
+            max-height: 200px;
             overflow-y: auto;
             border: 1px solid #ccc;
             background: #fff;
@@ -56,6 +56,11 @@
             margin-top: 10px;
             font-style: italic;
         }
+        #final-stats {
+            display: none;
+            margin-top: 40px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -64,6 +69,10 @@
         <label for="csvFile">Upload your PAO CSV (Number,Person,Action,Object):</label>
         <input type="file" id="csvFile" accept=".csv">
         <button onclick="loadCSV()">Load</button>
+    </div>
+
+    <div id="remaining-items" style="display: none; margin-top: 20px;">
+        <p>Items left to review: <span id="items-left"></span></p>
     </div>
 
     <div id="prompt-container" style="display: none;">
@@ -95,6 +104,13 @@
         <h3>Session Metrics</h3>
         <p>Total Attempts: <span id="total-attempts">0</span></p>
         <p>Average Grade: <span id="average-grade">N/A</span></p>
+    </div>
+
+    <div id="final-stats">
+        <h3>Final Session Statistics</h3>
+        <p>Total Attempts: <span id="final-total-attempts"></span></p>
+        <p>Average Grade: <span id="final-average-grade"></span></p>
+        <button onclick="restartSession()">Restart</button>
     </div>
 
     <script>
@@ -164,6 +180,16 @@
                 alert('The uploaded file has no valid entries!');
                 return;
             }
+            document.getElementById('remaining-items').style.display = 'block';
+            updateRemainingItems();
+            nextItem();
+        }
+
+        function nextItem() {
+            if (paoList.length === 0) {
+                showFinalStats();
+                return;
+            }
             currentIndex = Math.floor(Math.random() * paoList.length);
             document.getElementById('prompt-container').style.display = 'block';
             document.getElementById('number-prompt').innerText = paoList[currentIndex].number;
@@ -186,11 +212,17 @@
         function gradeRecall(grade) {
             const number = paoList[currentIndex].number;
             history.push({ number, grade });
+            paoList.splice(currentIndex, 1); // Remove reviewed item
             updateHistory();
             updateMetrics();
+            updateRemainingItems();
 
             document.getElementById('result-container').style.display = 'none';
-            startPractice();
+            nextItem();
+        }
+
+        function updateRemainingItems() {
+            document.getElementById('items-left').innerText = paoList.length;
         }
 
         function updateHistory() {
@@ -256,12 +288,34 @@
             }
         }
 
+        function showFinalStats() {
+            document.getElementById('prompt-container').style.display = 'none';
+            document.getElementById('result-container').style.display = 'none';
+            document.getElementById('remaining-items').style.display = 'none';
+
+            const totalAttempts = history.length;
+            const gradeValues = { 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'F': 0 };
+            const totalGradePoints = history.reduce((sum, item) => sum + gradeValues[item.grade], 0);
+            const averageGrade = totalAttempts > 0 ? (totalGradePoints / totalAttempts).toFixed(2) : 'N/A';
+
+            document.getElementById('final-total-attempts').innerText = totalAttempts;
+            document.getElementById('final-average-grade').innerText = averageGrade;
+
+            document.getElementById('final-stats').style.display = 'block';
+        }
+
         function undoLastGrade() {
             if (history.length > 0) {
-                history.pop();
+                const lastItem = history.pop();
+                paoList.push({ number: lastItem.number, person: '', action: '', object: '' });
                 updateHistory();
                 updateMetrics();
+                updateRemainingItems();
             }
+        }
+
+        function restartSession() {
+            location.reload();
         }
     </script>
 </body>
