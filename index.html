@@ -61,6 +61,24 @@
             margin-top: 40px;
             text-align: center;
         }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            cursor: pointer;
+        }
+        th:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
@@ -108,6 +126,16 @@
 
     <div id="final-stats">
         <h3>Final Session Statistics</h3>
+        <table id="final-stats-table">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Number</th>
+                    <th onclick="sortTable(1)">Grade</th>
+                    <th onclick="sortTable(2)">Time Taken (seconds)</th>
+                </tr>
+            </thead>
+            <tbody id="final-stats-body"></tbody>
+        </table>
         <p>Total Attempts: <span id="final-total-attempts"></span></p>
         <p>Average Grade: <span id="final-average-grade"></span></p>
         <button onclick="restartSession()">Restart</button>
@@ -211,7 +239,7 @@
 
         function gradeRecall(grade) {
             const number = paoList[currentIndex].number;
-            history.push({ number, grade });
+            history.push({ number, grade, time: lockedElapsedTime });
             paoList.splice(currentIndex, 1); // Remove reviewed item
             updateHistory();
             updateMetrics();
@@ -233,7 +261,8 @@
                 historyItem.className = 'history-item';
                 historyItem.innerHTML = `
                     <span>${item.number}</span>
-                    <span>${item.grade} <span class="confirmation">(Saved)</span></span>
+                    <span>${item.grade}</span>
+                    <span>${item.time} seconds</span>
                 `;
                 historyList.appendChild(historyItem);
             });
@@ -301,7 +330,34 @@
             document.getElementById('final-total-attempts').innerText = totalAttempts;
             document.getElementById('final-average-grade').innerText = averageGrade;
 
+            const finalStatsBody = document.getElementById('final-stats-body');
+            finalStatsBody.innerHTML = '';
+            history.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.number}</td>
+                    <td>${item.grade}</td>
+                    <td>${item.time}</td>
+                `;
+                finalStatsBody.appendChild(row);
+            });
+
             document.getElementById('final-stats').style.display = 'block';
+        }
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById('final-stats-table');
+            const rows = Array.from(table.rows).slice(1); // Exclude header row
+
+            const sortedRows = rows.sort((a, b) => {
+                const aText = a.cells[columnIndex].innerText;
+                const bText = b.cells[columnIndex].innerText;
+                return columnIndex === 2 ? parseFloat(aText) - parseFloat(bText) : aText.localeCompare(bText);
+            });
+
+            const tbody = table.tBodies[0];
+            tbody.innerHTML = '';
+            sortedRows.forEach(row => tbody.appendChild(row));
         }
 
         function undoLastGrade() {
