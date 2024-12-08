@@ -52,6 +52,10 @@
             margin-left: 10px;
             font-style: italic;
         }
+        .autoscore-info {
+            margin-top: 10px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -66,7 +70,6 @@
         <h2 id="number-prompt"></h2>
         <button id="reveal-button" onclick="revealAnswer()">Reveal Answer (R)</button>
         <button id="undo-button" onclick="undoLastGrade()">Undo Last Grade (U)</button>
-        <button id="autoscore-button" onclick="autoScore()">Autoscore</button>
     </div>
 
     <div id="result-container" style="display: none;">
@@ -78,7 +81,9 @@
             <button class="grade-button" id="grade-c" onclick="gradeRecall('C')">C</button>
             <button class="grade-button" id="grade-d" onclick="gradeRecall('D')">D</button>
             <button class="grade-button" id="grade-f" onclick="gradeRecall('F')">F</button>
+            <button class="grade-button" id="autoscore-button" onclick="autoScore()">Autoscore (S)</button>
         </div>
+        <div id="autoscore-info" class="autoscore-info" style="display: none;"></div>
     </div>
 
     <div id="history-container">
@@ -120,6 +125,9 @@
                     break;
                 case 'f':
                     gradeRecall('F');
+                    break;
+                case 's':
+                    autoScore();
                     break;
             }
         });
@@ -218,7 +226,9 @@
                 grade = 'D';
             }
 
-            gradeRecall(grade);
+            const info = `Elapsed time: ${elapsedTime.toFixed(2)} seconds. Autoscore: ${grade}`;
+            document.getElementById('autoscore-info').innerText = info;
+            document.getElementById('autoscore-info').style.display = 'block';
         }
 
         function undoLastGrade() {
