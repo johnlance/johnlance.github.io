@@ -15,7 +15,7 @@
         #upload-container {
             margin-top: 20px;
         }
-        #prompt-container, #result-container {
+        #prompt-container, #result-container, #metrics-container {
             margin-top: 40px;
         }
         #history-container {
@@ -66,6 +66,7 @@
         <h2 id="number-prompt"></h2>
         <button id="reveal-button" onclick="revealAnswer()">Reveal Answer (R)</button>
         <button id="undo-button" onclick="undoLastGrade()">Undo Last Grade (U)</button>
+        <button id="autoscore-button" onclick="autoScore()">Autoscore</button>
     </div>
 
     <div id="result-container" style="display: none;">
@@ -85,10 +86,17 @@
         <div id="history-list"></div>
     </div>
 
+    <div id="metrics-container">
+        <h3>Session Metrics</h3>
+        <p>Total Attempts: <span id="total-attempts">0</span></p>
+        <p>Average Grade: <span id="average-grade">N/A</span></p>
+    </div>
+
     <script>
         let paoList = [];
         let currentIndex = -1;
         let history = [];
+        let startTime = null;
 
         document.addEventListener('keydown', function(event) {
             switch(event.key.toLowerCase()) {
@@ -150,6 +158,7 @@
             currentIndex = Math.floor(Math.random() * paoList.length);
             document.getElementById('prompt-container').style.display = 'block';
             document.getElementById('number-prompt').innerText = paoList[currentIndex].number;
+            startTime = new Date();
         }
 
         function revealAnswer() {
@@ -163,6 +172,7 @@
             const number = paoList[currentIndex].number;
             history.push({ number, grade });
             updateHistory();
+            updateMetrics();
 
             document.getElementById('result-container').style.display = 'none';
             startPractice();
@@ -182,10 +192,40 @@
             });
         }
 
+        function updateMetrics() {
+            const totalAttempts = history.length;
+            const gradeValues = { 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'F': 0 };
+            const totalGradePoints = history.reduce((sum, item) => sum + gradeValues[item.grade], 0);
+            const averageGrade = totalAttempts > 0 ? (totalGradePoints / totalAttempts).toFixed(2) : 'N/A';
+
+            document.getElementById('total-attempts').innerText = totalAttempts;
+            document.getElementById('average-grade').innerText = averageGrade;
+        }
+
+        function autoScore() {
+            if (!startTime) return;
+
+            const elapsedTime = (new Date() - startTime) / 1000; // seconds
+            let grade;
+
+            if (elapsedTime < 2) {
+                grade = 'A';
+            } else if (elapsedTime < 5) {
+                grade = 'B';
+            } else if (elapsedTime < 10) {
+                grade = 'C';
+            } else {
+                grade = 'D';
+            }
+
+            gradeRecall(grade);
+        }
+
         function undoLastGrade() {
             if (history.length > 0) {
                 history.pop();
                 updateHistory();
+                updateMetrics();
             }
         }
     </script>
