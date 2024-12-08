@@ -83,7 +83,7 @@
             <button class="grade-button" id="grade-f" onclick="gradeRecall('F')">F</button>
             <button class="grade-button" id="autoscore-button" onclick="autoScore()">Autoscore (S)</button>
         </div>
-        <div id="autoscore-info" class="autoscore-info" style="display: none;"></div>
+        <div id="autoscore-info" class="autoscore-info"></div>
     </div>
 
     <div id="history-container">
@@ -102,6 +102,7 @@
         let currentIndex = -1;
         let history = [];
         let startTime = null;
+        let lockedElapsedTime = null;
 
         document.addEventListener('keydown', function(event) {
             switch(event.key.toLowerCase()) {
@@ -167,6 +168,8 @@
             document.getElementById('prompt-container').style.display = 'block';
             document.getElementById('number-prompt').innerText = paoList[currentIndex].number;
             startTime = new Date();
+            lockedElapsedTime = null;
+            updateAutoscoreInfo();
         }
 
         function revealAnswer() {
@@ -174,6 +177,10 @@
             const answer = `Person: ${entry.person}, Action: ${entry.action}, Object: ${entry.object}`;
             document.getElementById('answer-display').innerText = answer;
             document.getElementById('result-container').style.display = 'block';
+            if (startTime) {
+                lockedElapsedTime = ((new Date() - startTime) / 1000).toFixed(2); // Lock time
+                updateAutoscoreInfo();
+            }
         }
 
         function gradeRecall(grade) {
@@ -211,9 +218,9 @@
         }
 
         function autoScore() {
-            if (!startTime) return;
+            if (lockedElapsedTime === null) return;
 
-            const elapsedTime = (new Date() - startTime) / 1000; // seconds
+            const elapsedTime = parseFloat(lockedElapsedTime);
             let grade;
 
             if (elapsedTime < 2) {
@@ -226,9 +233,27 @@
                 grade = 'D';
             }
 
-            const info = `Elapsed time: ${elapsedTime.toFixed(2)} seconds. Autoscore: ${grade}`;
-            document.getElementById('autoscore-info').innerText = info;
-            document.getElementById('autoscore-info').style.display = 'block';
+            gradeRecall(grade);
+        }
+
+        function updateAutoscoreInfo() {
+            const infoElement = document.getElementById('autoscore-info');
+            if (lockedElapsedTime !== null) {
+                const elapsedTime = parseFloat(lockedElapsedTime);
+                let grade;
+                if (elapsedTime < 2) {
+                    grade = 'A';
+                } else if (elapsedTime < 5) {
+                    grade = 'B';
+                } else if (elapsedTime < 10) {
+                    grade = 'C';
+                } else {
+                    grade = 'D';
+                }
+                infoElement.innerText = `Elapsed time: ${lockedElapsedTime} seconds. Autoscore: ${grade}`;
+            } else {
+                infoElement.innerText = 'Autoscore will display here after revealing the answer.';
+            }
         }
 
         function undoLastGrade() {
