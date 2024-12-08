@@ -1,482 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>PAO Memory Practice</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Recall Practice</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
+            font-family: Arial, sans-serif;
             text-align: center;
-            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
         }
-        .challenge {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin: 20px 0;
+        #upload-container {
+            margin-top: 20px;
         }
-        .item {
-            font-size: 1.2em;
-            margin: 10px 0;
-            color: #2563eb;
+        #prompt-container, #result-container {
+            margin-top: 40px;
         }
         button {
-            background: #2563eb;
-            color: white;
-            border: none;
+            margin: 5px;
             padding: 10px 20px;
-            border-radius: 4px;
+            font-size: 16px;
+        }
+        .grade-button {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
             cursor: pointer;
-            font-size: 1em;
-            margin: 10px;
         }
-        button:hover {
-            background: #1d4ed8;
-        }
-        button.secondary {
-            background: #4b5563;
-        }
-        button.secondary:hover {
-            background: #374151;
-        }
-        input {
-            padding: 8px;
-            font-size: 1em;
-            width: 120px;
-            margin: 10px;
-            text-align: center;
-        }
-        .result {
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .correct { color: #16a34a; }
-        .incorrect { color: #dc2626; }
-        .mode-select {
-            margin-bottom: 20px;
-        }
-        .number-display {
-            font-size: 2em;
-            font-family: monospace;
-            margin: 20px 0;
-            letter-spacing: 2px;
-        }
-        .pao-reveal {
-            background: #f3f4f6;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .pao-reveal:hover {
-            background: #e5e7eb;
-        }
-        .hidden {
-            display: none;
-        }
-        select {
-            padding: 8px;
-            font-size: 1em;
-            margin: 10px;
-        }
-        .csv-input {
-            margin: 20px 0;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .csv-input p {
-            margin: 10px 0;
-            font-size: 0.9em;
-            color: #666;
-        }
-        #csvFile {
-            margin: 10px 0;
-        }
-        .shortcut-hint {
-            font-size: 0.8em;
-            color: #666;
-            margin-left: 5px;
-        }
-        .button-flash {
-            animation: flash 0.2s;
-        }
-        @keyframes flash {
-            0% { background-color: #2563eb; }
-            50% { background-color: #4338ca; }
-            100% { background-color: #2563eb; }
-        }
-        .input-flash {
-            animation: inputHighlight 0.3s;
-        }
-        @keyframes inputHighlight {
-            0% { background-color: #ffffff; }
-            50% { background-color: #f3f4f6; }
-            100% { background-color: #ffffff; }
-        }
-        .stats {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .history-item {
-            text-align: left;
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            font-size: 0.9em;
-        }
-        .history-item:last-child {
-            border-bottom: none;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .stat-box {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
-            max-width: 400px;
-            width: 90%;
-        }
-        .modal-content {
-            text-align: left;
-            margin: 15px 0;
-            white-space: pre-line;
-        }
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
+        .grade-button:hover {
+            background-color: #ddd;
         }
     </style>
 </head>
 <body>
-    <h1>PAO Memory Practice</h1>
-    
-    <div class="csv-input">
-        <h3>Load Custom PAO System</h3>
-        <p>CSV format: number,person,action,object</p>
-        <p>Example: 00,Owl,Hooting,Moon</p>
+    <h1>Memory Recall Practice</h1>
+    <div id="upload-container">
+        <label for="csvFile">Upload your PAO CSV (Number,Person,Action,Object):</label>
         <input type="file" id="csvFile" accept=".csv">
-        <button onclick="loadCSV()">Load PAO System</button>
+        <button onclick="loadCSV()">Load</button>
     </div>
 
-    <div class="mode-select">
-        <button onclick="switchMode('pao')" id="paoModeBtn">PAO → Number Mode</button>
-        <button onclick="switchMode('number')" id="numberModeBtn">Number → PAO Mode</button>
+    <div id="prompt-container" style="display: none;">
+        <h2 id="number-prompt"></h2>
+        <button onclick="revealAnswer()">Reveal Answer</button>
     </div>
 
-    <div id="paoMode">
-        <div class="stats">
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <div>Attempted: <span id="totalCount">0</span></div>
-                    <div>Correct: <span id="correctCount">0</span></div>
-                    <div>Success Rate: <span id="successRate">0%</span></div>
-                </div>
-            </div>
-            <button onclick="resetStats()" class="secondary">Reset Stats</button>
-            <div id="history"></div>
-        </div>
-
-        <div class="challenge">
-            <div class="item" id="person"></div>
-            <div class="item" id="action"></div>
-            <div class="item" id="object"></div>
-        </div>
+    <div id="result-container" style="display: none;">
+        <p id="answer-display"></p>
         <div>
-            <input type="text" id="answer" placeholder="Enter number" maxlength="6">
-            <button id="checkButton" onclick="checkAnswer()">Check <span class="shortcut-hint">(Enter)</span></button>
+            <p>Grade your recall:</p>
+            <button class="grade-button" onclick="gradeRecall('A')">A</button>
+            <button class="grade-button" onclick="gradeRecall('B')">B</button>
+            <button class="grade-button" onclick="gradeRecall('C')">C</button>
+            <button class="grade-button" onclick="gradeRecall('D')">D</button>
+            <button class="grade-button" onclick="gradeRecall('F')">F</button>
         </div>
-        <button id="newChallengeButton" onclick="newChallenge()">New Challenge <span class="shortcut-hint">(+)</span></button>
-        <div id="result" class="result"></div>
     </div>
-
-    <div id="numberMode" class="hidden">
-        <div>
-            <select id="digitCount">
-                <option value="6">6 digits (1 group)</option>
-                <option value="12">12 digits (2 groups)</option>
-                <option value="18">18 digits (3 groups)</option>
-                <option value="24">24 digits (4 groups)</option>
-            </select>
-        </div>
-        <button onclick="generateNumber()">Generate Number</button>
-        <div class="number-display" id="numberDisplay"></div>
-        <div id="paoRevealContainer"></div>
-    </div>
-
-    <div id="confirmationModal" class="modal hidden">
-        <h3>PAO System Updated</h3>
-        <div id="modalContent" class="modal-content"></div>
-        <button onclick="closeModal()">OK</button>
-    </div>
-    <div id="modalOverlay" class="modal-overlay hidden" onclick="closeModal()"></div>
 
     <script>
-        const paoSystem = {};
-        let currentChallenge;
-        let currentMode = 'pao';
-        let stats = {
-            total: 0,
-            correct: 0,
-            history: []
-        };
-
-        function showModal(content) {
-            document.getElementById('modalContent').textContent = content;
-            document.getElementById('confirmationModal').classList.remove('hidden');
-            document.getElementById('modalOverlay').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('confirmationModal').classList.add('hidden');
-            document.getElementById('modalOverlay').classList.add('hidden');
-        }
-
-        function flashButton(buttonId) {
-            const button = document.getElementById(buttonId);
-            button.classList.add('button-flash');
-            setTimeout(() => button.classList.remove('button-flash'), 200);
-        }
-
-        function flashInput() {
-            const input = document.getElementById('answer');
-            input.classList.add('input-flash');
-            setTimeout(() => input.classList.remove('input-flash'), 300);
-        }
-
-        function updateStats(correct, pao, guess, actual) {
-            stats.total++;
-            if (correct) stats.correct++;
-            
-            stats.history.unshift({
-                pao,
-                guess,
-                actual,
-                correct
-            });
-            
-            if (stats.history.length > 5) {
-                stats.history.pop();
-            }
-            
-            document.getElementById('totalCount').textContent = stats.total;
-            document.getElementById('correctCount').textContent = stats.correct;
-            document.getElementById('successRate').textContent = 
-                `${((stats.correct / stats.total) * 100).toFixed(1)}%`;
-            
-            updateHistory();
-        }
-
-        function updateHistory() {
-            const history = document.getElementById('history');
-            history.innerHTML = stats.history.map(entry => `
-                <div class="history-item">
-                    <span style="color: ${entry.correct ? '#16a34a' : '#dc2626'}">
-                        ${entry.correct ? '✓' : '✗'}
-                    </span>
-                    ${entry.pao} →
-                    Your answer: ${entry.guess}
-                    ${!entry.correct ? `(Correct: ${entry.actual})` : ''}
-                </div>
-            `).join('');
-        }
-
-        function resetStats() {
-            stats = {
-                total: 0,
-                correct: 0,
-                history: []
-            };
-            document.getElementById('totalCount').textContent = '0';
-            document.getElementById('correctCount').textContent = '0';
-            document.getElementById('successRate').textContent = '0%';
-            document.getElementById('history').innerHTML = '';
-        }
-
-        function getRandomNumber() {
-            const size = Math.min(100, Object.keys(paoSystem).length);
-            return Math.floor(Math.random() * size).toString().padStart(2, '0');
-        }
+        let paoList = [];
+        let currentIndex = -1;
 
         function loadCSV() {
-            const file = document.getElementById('csvFile').files[0];
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
             if (!file) {
-                alert('Please select a CSV file');
+                alert('Please upload a file!');
                 return;
             }
 
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const text = e.target.result;
-                const lines = text.split('\n');
-                const newPaoSystem = {};
-
-                for (let line of lines) {
-                    line = line.trim();
-                    if (!line) continue;
-                    
-                    const [number, person, action, object] = line.split(',').map(x => x.trim());
-                    if (number && person && action && object) {
-                        newPaoSystem[number] = { person, action, object };
-                    }
-                }
-
-                if (Object.keys(newPaoSystem).length < 3) {
-                    alert('CSV must contain at least 3 PAO entries');
-                    return;
-                }
-
-                Object.assign(paoSystem, newPaoSystem);
-                
-                const entries = Object.entries(newPaoSystem);
-                const sample = entries.slice(0, 3);
-                const message = `System successfully updated with ${Object.keys(newPaoSystem).length} entries!\n\n` +
-                    `Here's a sample from your new system:\n\n` +
-                    sample.map(([num, {person, action, object}]) => 
-                        `${num}: ${person} ${action} ${object}`
-                    ).join('\n');
-                
-                showModal(message);
-                resetStats();
-                
-                if (currentMode === 'pao') {
-                    newChallenge();
-                } else {
-                    generateNumber();
-                }
+            reader.onload = function(event) {
+                const text = event.target.result;
+                paoList = parseCSV(text);
+                startPractice();
             };
             reader.readAsText(file);
         }
 
-        function switchMode(mode) {
-            currentMode = mode;
-            document.getElementById('paoMode').classList.toggle('hidden', mode !== 'pao');
-            document.getElementById('numberMode').classList.toggle('hidden', mode !== 'number');
-            document.getElementById('paoModeBtn').style.opacity = mode === 'pao' ? '0.5' : '1';
-            document.getElementById('numberModeBtn').style.opacity = mode === 'number' ? '0.5' : '1';
-            if (mode === 'pao') {
-                newChallenge();
-            } else {
-                generateNumber();
-            }
-        }
-
-        function newChallenge() {
-            const num1 = getRandomNumber();
-            const num2 = getRandomNumber();
-            const num3 = getRandomNumber();
-            
-            document.getElementById('person').textContent = paoSystem[num1].person;
-            document.getElementById('action').textContent = paoSystem[num2].action;
-            document.getElementById('object').textContent = paoSystem[num3].object;
-            
-            currentChallenge = num1 + num2 + num3;
-            document.getElementById('answer').value = '';
-            document.getElementById('result').textContent = '';
-            document.getElementById('answer').focus();
-            flashInput();
-        }
-
-        function checkAnswer() {
-            const answer = document.getElementById('answer').value.padStart(6, '0');
-            const result = document.getElementById('result');
-            const correct = answer === currentChallenge;
-            
-            const paoString = `${paoSystem[currentChallenge.slice(0,2)].person} → ` +
-                            `${paoSystem[currentChallenge.slice(2,4)].action} → ` +
-                            `${paoSystem[currentChallenge.slice(4,6)].object}`;
-            
-            updateStats(correct, paoString, answer, currentChallenge);
-            
-            if (correct) {
-                result.textContent = 'Correct! 🎉';
-                result.className = 'result correct';
-            } else {
-                result.textContent = `Incorrect. The answer was ${currentChallenge}`;
-                result.className = 'result incorrect';
-            }
-        }
-
-        function generateNumber() {
-            const digitCount = parseInt(document.getElementById('digitCount').value);
-            let number = '';
-            const groups = [];
-            
-            for (let i = 0; i < digitCount; i += 2) {
-                number += getRandomNumber();
-            }
-            
-            for (let i = 0; i < number.length; i += 6) {
-                groups.push(number.slice(i, i + 6));
-            }
-            
-            document.getElementById('numberDisplay').textContent = groups.join(' ');
-            
-            const container = document.getElementById('paoRevealContainer');
-            container.innerHTML = '';
-            
-            groups.forEach((group, index) => {
-                const div = document.createElement('div');
-                div.className = 'pao-reveal';
-                div.setAttribute('data-revealed', 'false');
-                div.textContent = `Click to reveal PAO for ${group}`;
-                
-                div.onclick = function() {
-                    if (this.getAttribute('data-revealed') === 'false') {
-                        const pao1 = paoSystem[group.slice(0,2)];
-                        const pao2 = paoSystem[group.slice(2,4)];
-                        const pao3 = paoSystem[group.slice(4,6)];
-                        
-                        this.innerHTML = `
-                            <strong>Person:</strong> ${pao1.person}<br>
-                            <strong>Action:</strong> ${pao2.action}<br>
-                            <strong>Object:</strong> ${pao3.object}
-                        `;
-                        this.setAttribute('data-revealed', 'true');
-                    }
-                };
-                
-                container.appendChild(div);
+        function parseCSV(text) {
+            const rows = text.split('\n');
+            const list = rows.slice(1).map(row => {
+                const [number, person, action, object] = row.split(',');
+                return { number: number.trim(), person: person.trim(), action: action.trim(), object: object.trim() };
             });
+            return list.filter(entry => entry.number);
         }
 
-        document.getElementById('answer').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                flashButton('checkButton');
-                checkAnswer();
-            } else if (e.key === '+' || e.key === '=') {
-                flashButton('newChallengeButton');
-                newChallenge();
-                e.preventDefault(); // Prevent the + from being typed
+        function startPractice() {
+            if (paoList.length === 0) {
+                alert('The uploaded file has no valid entries!');
+                return;
             }
-        });
+            currentIndex = Math.floor(Math.random() * paoList.length);
+            document.getElementById('prompt-container').style.display = 'block';
+            document.getElementById('number-prompt').innerText = paoList[currentIndex].number;
+        }
+
+        function revealAnswer() {
+            const entry = paoList[currentIndex];
+            const answer = `Person: ${entry.person}, Action: ${entry.action}, Object: ${entry.object}`;
+            document.getElementById('answer-display').innerText = answer;
+            document.getElementById('result-container').style.display = 'block';
+        }
+
+        function gradeRecall(grade) {
+            alert(`You graded ${paoList[currentIndex].number} as ${grade}`);
+            document.getElementById('result-container').style.display = 'none';
+            startPractice();
+        }
     </script>
 </body>
 </html>
