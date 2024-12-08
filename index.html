@@ -62,19 +62,19 @@
 
     <div id="prompt-container" style="display: none;">
         <h2 id="number-prompt"></h2>
-        <button onclick="revealAnswer()" accesskey="r">Reveal Answer (R)</button>
-        <button onclick="undoLastGrade()" accesskey="u">Undo Last Grade (U)</button>
+        <button id="reveal-button" onclick="revealAnswer()">Reveal Answer (R)</button>
+        <button id="undo-button" onclick="undoLastGrade()">Undo Last Grade (U)</button>
     </div>
 
     <div id="result-container" style="display: none;">
         <p id="answer-display"></p>
         <div>
             <p>Grade your recall:</p>
-            <button class="grade-button" onclick="gradeRecall('A')">A</button>
-            <button class="grade-button" onclick="gradeRecall('B')">B</button>
-            <button class="grade-button" onclick="gradeRecall('C')">C</button>
-            <button class="grade-button" onclick="gradeRecall('D')">D</button>
-            <button class="grade-button" onclick="gradeRecall('F')">F</button>
+            <button class="grade-button" id="grade-a" onclick="gradeRecall('A')">A</button>
+            <button class="grade-button" id="grade-b" onclick="gradeRecall('B')">B</button>
+            <button class="grade-button" id="grade-c" onclick="gradeRecall('C')">C</button>
+            <button class="grade-button" id="grade-d" onclick="gradeRecall('D')">D</button>
+            <button class="grade-button" id="grade-f" onclick="gradeRecall('F')">F</button>
         </div>
     </div>
 
@@ -87,6 +87,32 @@
         let paoList = [];
         let currentIndex = -1;
         let history = [];
+
+        document.addEventListener('keydown', function(event) {
+            switch(event.key.toLowerCase()) {
+                case 'r':
+                    revealAnswer();
+                    break;
+                case 'u':
+                    undoLastGrade();
+                    break;
+                case 'a':
+                    gradeRecall('A');
+                    break;
+                case 'b':
+                    gradeRecall('B');
+                    break;
+                case 'c':
+                    gradeRecall('C');
+                    break;
+                case 'd':
+                    gradeRecall('D');
+                    break;
+                case 'f':
+                    gradeRecall('F');
+                    break;
+            }
+        });
 
         function loadCSV() {
             const fileInput = document.getElementById('csvFile');
