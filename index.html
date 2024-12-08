@@ -18,6 +18,14 @@
         #prompt-container, #result-container {
             margin-top: 40px;
         }
+        #history-container {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            background: #fff;
+            padding: 10px;
+        }
         button {
             margin: 5px;
             padding: 10px 20px;
@@ -31,6 +39,17 @@
         .grade-button:hover {
             background-color: #ddd;
         }
+        .history-item {
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        .confirmation {
+            color: green;
+            margin-left: 10px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -43,7 +62,8 @@
 
     <div id="prompt-container" style="display: none;">
         <h2 id="number-prompt"></h2>
-        <button onclick="revealAnswer()">Reveal Answer</button>
+        <button onclick="revealAnswer()" accesskey="r">Reveal Answer (R)</button>
+        <button onclick="undoLastGrade()" accesskey="u">Undo Last Grade (U)</button>
     </div>
 
     <div id="result-container" style="display: none;">
@@ -58,9 +78,15 @@
         </div>
     </div>
 
+    <div id="history-container">
+        <h3>Previous Attempts</h3>
+        <div id="history-list"></div>
+    </div>
+
     <script>
         let paoList = [];
         let currentIndex = -1;
+        let history = [];
 
         function loadCSV() {
             const fileInput = document.getElementById('csvFile');
@@ -106,9 +132,33 @@
         }
 
         function gradeRecall(grade) {
-            alert(`You graded ${paoList[currentIndex].number} as ${grade}`);
+            const number = paoList[currentIndex].number;
+            history.push({ number, grade });
+            updateHistory();
+
             document.getElementById('result-container').style.display = 'none';
             startPractice();
+        }
+
+        function updateHistory() {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+            history.forEach((item, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <span>${item.number}</span>
+                    <span>${item.grade} <span class="confirmation">(Saved)</span></span>
+                `;
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        function undoLastGrade() {
+            if (history.length > 0) {
+                history.pop();
+                updateHistory();
+            }
         }
     </script>
 </body>
