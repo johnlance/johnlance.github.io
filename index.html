@@ -20,15 +20,69 @@
 </head>
 <body>
     <h1>Memory Recall Practice</h1>
-    
+
     <!-- React mount point -->
     <div id="memory-practice-app"></div>
-    
-    <!-- Your existing content -->
+
     <div id="upload-container">
-        <!-- ... your existing HTML ... -->
+        <label for="csvFile">Upload your PAO CSV (Number,Person,Action,Object):</label>
+        <input type="file" id="csvFile" accept=".csv">
+        <button onclick="loadCSV()">Load</button>
+        <button onclick="loadDefaultPAO()">Use Default PAO</button>
     </div>
-    
+
+    <div id="remaining-items" style="display: none; margin-top: 20px;">
+        <p>Items left to review: <span id="items-left"></span></p>
+    </div>
+
+    <div id="prompt-container" style="display: none;">
+        <h2 id="number-prompt"></h2>
+        <button id="reveal-button" onclick="revealAnswer()">Reveal Answer (R)</button>
+        <button id="undo-button" onclick="undoLastGrade()">Undo Last Grade (U)</button>
+    </div>
+
+    <div id="result-container" style="display: none;">
+        <p id="answer-display"></p>
+        <div>
+            <p>Grade your recall:</p>
+            <button class="grade-button" id="grade-a" onclick="gradeRecall('A')">A</button>
+            <button class="grade-button" id="grade-b" onclick="gradeRecall('B')">B</button>
+            <button class="grade-button" id="grade-c" onclick="gradeRecall('C')">C</button>
+            <button class="grade-button" id="grade-d" onclick="gradeRecall('D')">D</button>
+            <button class="grade-button" id="grade-f" onclick="gradeRecall('F')">F</button>
+            <button class="grade-button" id="autoscore-button" onclick="autoScore()">Autoscore (S)</button>
+        </div>
+        <div id="autoscore-info" class="autoscore-info"></div>
+    </div>
+
+    <div id="history-container">
+        <h3>Previous Attempts</h3>
+        <div id="history-list"></div>
+    </div>
+
+    <div id="metrics-container">
+        <h3>Session Metrics</h3>
+        <p>Total Attempts: <span id="total-attempts">0</span></p>
+        <p>Average Grade: <span id="average-grade">N/A</span></p>
+    </div>
+
+    <div id="final-stats">
+        <h3>Final Session Statistics</h3>
+        <table id="final-stats-table">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Number</th>
+                    <th onclick="sortTable(1)">Grade</th>
+                    <th onclick="sortTable(2)">Time Taken (seconds)</th>
+                </tr>
+            </thead>
+            <tbody id="final-stats-body"></tbody>
+        </table>
+        <p>Total Attempts: <span id="final-total-attempts"></span></p>
+        <p>Average Grade: <span id="final-average-grade"></span></p>
+        <button onclick="restartSession()">Restart</button>
+    </div>
+
     <!-- React components -->
     <script type="text/babel" src="components/MemoryPracticeSelector.jsx"></script>
     
@@ -39,8 +93,9 @@
             document.getElementById('memory-practice-app')
         );
     </script>
-    
+
     <!-- Your existing script -->
     <script src="script.js"></script>
+
 </body>
 </html>
