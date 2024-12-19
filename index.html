@@ -11,217 +11,74 @@
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <style>
-        /* Base Styles */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-            background-color: #f5f5f5;
-        }
-
-        .container {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Typography */
-        h1 {
-            color: #333;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        /* Interactive Elements */
-        button {
-            background-color: #4a5568;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            border: none;
-            margin: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        button:hover {
-            background-color: #2d3748;
-        }
-
-        .grade-button {
-            background-color: #4a5568;
-            margin: 0.25rem;
-        }
-
-        /* Tables */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        th {
-            background-color: #f7fafc;
-            font-weight: bold;
-        }
-
-        /* Containers */
-        #upload-container {
-            margin-bottom: 2rem;
-        }
-
-        #history-container {
-            margin-top: 2rem;
-            padding: 1rem;
-            background-color: #f7fafc;
-            border-radius: 4px;
-        }
-
-        .history-item {
-            padding: 0.5rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        #final-stats {
-            margin-top: 2rem;
-            padding: 1rem;
-            background-color: #f7fafc;
-            border-radius: 4px;
-            display: none;
-        }
-
-        #prompt-container, #result-container {
-            margin: 2rem 0;
-            padding: 1rem;
-            background-color: #f7fafc;
-            border-radius: 4px;
-        }
-
-        .autoscore-info {
-            margin-top: 10px;
-            font-style: italic;
-            color: #666;
-        }
-
-        /* Form Elements */
-        input[type="file"] {
-            margin: 0.5rem 0;
-            padding: 0.5rem;
-        }
-
-        /* Tab Navigation */
-        .practice-tabs {
-            border-bottom: 2px solid #e2e8f0;
-            margin-bottom: 2rem;
-        }
-
-        .practice-tab {
-            padding: 1rem 2rem;
-            margin-right: 0.5rem;
-            border: none;
-            background: none;
-            color: #4a5568;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .practice-tab.active {
-            color: #2b6cb0;
-            font-weight: 600;
-        }
-
-        .practice-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #2b6cb0;
-        }
-
-        /* Practice Mode Content */
-        .practice-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .coming-soon {
-            padding: 4rem;
-            text-align: center;
-            color: #718096;
-            background: #f7fafc;
-            border: 2px dashed #e2e8f0;
-            border-radius: 8px;
-        }
-    </style>
+    <!-- Your CSS file link -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Memory Recall Practice</h1>
 
-        <div id="memory-practice-app"></div>
+        <!-- React app mount point -->
+        <div id="memory-practice-app" class="practice-section"></div>
 
-        <!-- The rest of your original HTML content will be conditionally rendered based on the selected practice mode -->
-        <div id="pao-content">
-            <div id="upload-container">
-                <label for="csvFile">Upload your PAO CSV (Number,Person,Action,Object):</label>
-                <input type="file" id="csvFile" accept=".csv">
-                <button onclick="loadCSV()">Load</button>
-                <button onclick="loadDefaultPAO()">Use Default PAO</button>
+        <!-- Main practice area -->
+        <div id="pao-content" class="practice-content">
+            <div id="upload-container" class="section-container">
+                <h2 class="section-title">Upload PAO Data</h2>
+                <div class="upload-controls">
+                    <label for="csvFile">Upload your PAO CSV (Number,Person,Action,Object):</label>
+                    <input type="file" id="csvFile" accept=".csv" class="file-input">
+                    <div class="button-group">
+                        <button onclick="loadCSV()" class="primary-button">Load</button>
+                        <button onclick="loadDefaultPAO()" class="secondary-button">Use Default PAO</button>
+                    </div>
+                </div>
             </div>
 
-            <div id="remaining-items" style="display: none; margin-top: 20px;">
-                <p>Items left to review: <span id="items-left"></span></p>
+            <div id="remaining-items" class="status-container" style="display: none;">
+                <p>Items left to review: <span id="items-left" class="status-number"></span></p>
             </div>
 
-            <div id="prompt-container" style="display: none;">
-                <h2 id="number-prompt"></h2>
-                <button id="reveal-button" onclick="revealAnswer()">Reveal Answer (R)</button>
-                <button id="undo-button" onclick="undoLastGrade()">Undo Last Grade (U)</button>
+            <div id="prompt-container" class="practice-section" style="display: none;">
+                <h2 id="number-prompt" class="prompt-number"></h2>
+                <div class="button-group">
+                    <button id="reveal-button" onclick="revealAnswer()" class="primary-button">Reveal Answer (R)</button>
+                    <button id="undo-button" onclick="undoLastGrade()" class="secondary-button">Undo Last Grade (U)</button>
+                </div>
             </div>
 
-            <div id="result-container" style="display: none;">
-                <p id="answer-display"></p>
-                <div>
+            <div id="result-container" class="practice-section" style="display: none;">
+                <p id="answer-display" class="answer-text"></p>
+                <div class="grading-section">
                     <p>Grade your recall:</p>
-                    <button class="grade-button" id="grade-a" onclick="gradeRecall('A')">A</button>
-                    <button class="grade-button" id="grade-b" onclick="gradeRecall('B')">B</button>
-                    <button class="grade-button" id="grade-c" onclick="gradeRecall('C')">C</button>
-                    <button class="grade-button" id="grade-d" onclick="gradeRecall('D')">D</button>
-                    <button class="grade-button" id="grade-f" onclick="gradeRecall('F')">F</button>
-                    <button class="grade-button" id="autoscore-button" onclick="autoScore()">Autoscore (S)</button>
+                    <div class="grade-buttons">
+                        <button class="grade-button" id="grade-a" onclick="gradeRecall('A')">A</button>
+                        <button class="grade-button" id="grade-b" onclick="gradeRecall('B')">B</button>
+                        <button class="grade-button" id="grade-c" onclick="gradeRecall('C')">C</button>
+                        <button class="grade-button" id="grade-d" onclick="gradeRecall('D')">D</button>
+                        <button class="grade-button" id="grade-f" onclick="gradeRecall('F')">F</button>
+                        <button class="grade-button autoscore" id="autoscore-button" onclick="autoScore()">Autoscore (S)</button>
+                    </div>
                 </div>
                 <div id="autoscore-info" class="autoscore-info"></div>
             </div>
 
-            <div id="history-container">
-                <h3>Previous Attempts</h3>
-                <div id="history-list"></div>
+            <div id="history-container" class="section-container">
+                <h3 class="section-title">Previous Attempts</h3>
+                <div id="history-list" class="history-list"></div>
             </div>
 
-            <div id="metrics-container">
-                <h3>Session Metrics</h3>
-                <p>Total Attempts: <span id="total-attempts">0</span></p>
-                <p>Average Grade: <span id="average-grade">N/A</span></p>
+            <div id="metrics-container" class="section-container">
+                <h3 class="section-title">Session Metrics</h3>
+                <div class="metrics-grid">
+                    <p>Total Attempts: <span id="total-attempts" class="metric-value">0</span></p>
+                    <p>Average Grade: <span id="average-grade" class="metric-value">N/A</span></p>
+                </div>
             </div>
 
-            <div id="final-stats">
-                <h3>Final Session Statistics</h3>
-                <table id="final-stats-table">
+            <div id="final-stats" class="section-container">
+                <h3 class="section-title">Final Session Statistics</h3>
+                <table id="final-stats-table" class="stats-table">
                     <thead>
                         <tr>
                             <th onclick="sortTable(0)">Number</th>
@@ -231,14 +88,17 @@
                     </thead>
                     <tbody id="final-stats-body"></tbody>
                 </table>
-                <p>Total Attempts: <span id="final-total-attempts"></span></p>
-                <p>Average Grade: <span id="final-average-grade"></span></p>
-                <button onclick="restartSession()">Restart</button>
+                <div class="final-metrics">
+                    <p>Total Attempts: <span id="final-total-attempts" class="metric-value"></span></p>
+                    <p>Average Grade: <span id="final-average-grade" class="metric-value"></span></p>
+                </div>
+                <button onclick="restartSession()" class="primary-button">Restart</button>
             </div>
         </div>
     </div>
 
-    <!-- Memory Practice Selector Component -->
+    <!-- Your existing script tags remain the same -->
+
     <script type="text/babel">
         const { useState, useEffect } = React;
 
