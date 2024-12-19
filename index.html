@@ -3,31 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Recall Practice - Beta</title>
+    <title>Memory Recall Practice</title>
     
-    <!-- Add React and ReactDOM -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- React and ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     
-    <!-- Add Tailwind -->
+    <!-- Babel for JSX transformation -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Your existing styles -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Memory Recall Practice - Beta</h1>
+    <h1>Memory Recall Practice</h1>
     
-    <!-- Add mount point for React components -->
-    <div id="react-root"></div>
+    <!-- React mount point -->
+    <div id="memory-practice-app"></div>
     
-    <!-- Your existing HTML content -->
+    <!-- Your existing content -->
     <div id="upload-container">
-        <!-- ... rest of your existing HTML ... -->
+        <!-- ... your existing HTML ... -->
     </div>
     
-    <!-- Load React components -->
-    <script type="module" src="components/MemoryPracticeSelector.jsx"></script>
+    <!-- React components -->
+    <script type="text/babel" src="components/MemoryPracticeSelector.jsx"></script>
+    
+    <!-- Initialize React app -->
+    <script type="text/babel">
+        ReactDOM.render(
+            <MemoryPracticeSelector />,
+            document.getElementById('memory-practice-app')
+        );
+    </script>
     
     <!-- Your existing script -->
     <script src="script.js"></script>
