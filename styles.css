@@ -1,302 +1,171 @@
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
-    color: #333;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 20px;
-    background-color: #f4f4f4;
-}
-
-header {
-    background-color: #2c3e50;
-    padding: 1rem;
-    border-radius: 5px 5px 0 0;
-    margin-bottom: 20px;
-}
-
-header h1 {
-    color: #ecf0f1;
-    margin: 0;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    font-size: 2rem;
-}
-
-main {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 0 0 5px 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 2rem;
+    background-color: #f0f2f5;
+    color: #1a1a1a;
 }
 
 .container {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.left-column {
-    flex: 2;
+h1 {
+    color: #1a1a1a;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
-.right-column {
+/* Tab Navigation */
+.practice-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.practice-tab {
     flex: 1;
-}
-
-#update-info, #card-input, #tracked-cards, #notifications {
-    background-color: #ffffff;
-    border-radius: 5px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s ease;
-    margin-bottom: 20px;
-}
-
-#update-info:hover, #card-input:hover, #tracked-cards:hover, #notifications:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-#update-info h2, #card-input h2 {
-    color: #2c3e50;
-    margin-top: 0;
-}
-
-#card-input form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
-#card-input input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-#card-input input[type="submit"] {
-    grid-column: span 2;
-    background-color: #3498db;
-    color: white;
+    padding: 1rem;
     border: none;
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    background: transparent;
+    color: #64748b;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
-#card-input input[type="submit"]:hover {
-    background-color: #2980b9;
+.practice-tab:hover {
+    background: #f1f5f9;
+    color: #0f172a;
 }
 
-#card-input input#card-name {
-    grid-column: span 2;
+.practice-tab.active {
+    background: #fff;
+    color: #2563eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* Content Areas */
+#upload-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+#prompt-container, #result-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin: 1rem 0;
+}
+
+/* Buttons */
 button {
-    background-color: #3498db;
+    background-color: #2563eb;
     color: white;
-    padding: 10px 15px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
     border: none;
-    border-radius: 4px;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease;
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: #1d4ed8;
 }
 
-#tracked-cards table {
+.grade-button {
+    background-color: #64748b;
+    padding: 0.5rem 1rem;
+    margin: 0.25rem;
+}
+
+.grade-button:hover {
+    background-color: #475569;
+}
+
+/* File Input */
+input[type="file"] {
+    background: #f8fafc;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 2px dashed #e2e8f0;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+/* History and Metrics */
+#history-container, #metrics-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin: 1rem 0;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+/* Numbers and Stats */
+#number-prompt {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    color: #1a1a1a;
+    margin: 1rem 0;
+}
+
+.coming-soon {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #f8fafc;
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    color: #64748b;
+}
+
+/* Table Styling */
+table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 10px;
-    margin-top: 20px;
+    border-spacing: 0;
+    margin: 1rem 0;
 }
 
-#tracked-cards tr {
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-#tracked-cards tr:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-#tracked-cards th {
-    background-color: #3498db;
-    color: #fff;
-    padding: 12px;
-    text-align: left;
-    font-weight: bold;
-}
-
-#tracked-cards td {
-    padding: 12px;
-    border: none;
-}
-
-#tracked-cards td:first-child,
-#tracked-cards th:first-child {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-
-#tracked-cards td:last-child,
-#tracked-cards th:last-child {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-#tracked-cards button {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#tracked-cards button:hover {
-    background-color: #c0392b;
-}
-
-#notifications {
-    background-color: #f8f9fa;
-}
-
-#alert-list .alert {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    margin-bottom: 10px;
-    transition: all 0.3s ease;
-}
-
-#alert-list .alert.new {
-    background-color: #e8f5e9;
-    border-color: #4caf50;
-    animation: fadeIn 0.5s ease-out;
-}
-
-#alert-list .alert.viewed {
-    color: #6c757d;
-}
-
-.alert-timestamp {
-    font-size: 0.8em;
-    color: #6c757d;
-}
-
-#card-list img {
-    max-width: 100px;
-    height: auto;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-footer {
-    text-align: center;
+th, td {
     padding: 1rem;
-    color: #7f8c8d;
-    font-size: 0.9em;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-#loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    color: #1a1a1a;
 }
 
-.spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.awesomplete > ul {
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-}
-
-.awesomplete > ul > li {
-    padding: 8px 12px;
-    cursor: pointer;
-}
-
-.awesomplete > ul > li:hover {
-    background-color: #e9ecef;
-}
-
-.awesomplete mark {
-    background-color: #ffffd1;
-}
-
-@media (max-width: 768px) {
-    .container {
-        grid-template-columns: 1fr;
-    }
-
-    #card-input form {
-        grid-template-columns: 1fr;
-    }
-
-    #card-input input[type="submit"] {
-        grid-column: span 1;
-    }
-
-    #tracked-cards table, #tracked-cards thead, #tracked-cards tbody, #tracked-cards th, #tracked-cards td, #tracked-cards tr {
-        display: block;
-    }
-    
-    #tracked-cards thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-    
-    #tracked-cards tr {
-        margin-bottom: 15px;
-    }
-    
-    #tracked-cards td {
-        border: none;
-        position: relative;
-        padding-left: 50%;
-    }
-    
-    #tracked-cards td:before {
-        content: attr(data-label);
-        position: absolute;
-        left: 6px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        font-weight: bold;
-    }
+tr:hover {
+    background-color: #f8fafc;
 }
