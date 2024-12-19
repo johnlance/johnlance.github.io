@@ -369,9 +369,218 @@
             }
         });
 
-        // Add all your existing JavaScript functions here:
-        // loadCSV, loadDefaultPAO, startPractice, nextItem, revealAnswer,
-        // gradeRecall, updateHistory, updateMetrics, etc.
+        function loadCSV() {
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please upload a file!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const text = event.target.result;
+                paoList = parseCSV(text);
+                startPractice();
+            };
+            reader.readAsText(file);
+        }
+
+        function parseCSV(text) {
+            const rows = text.split('\n');
+            const list = rows.slice(1).map(row => {
+                const [number, person, action, object] = row.split(',');
+                return { 
+                    number: number.trim(), 
+                    person: person.trim(), 
+                    action: action.trim(), 
+                    object: object.trim() 
+                };
+            });
+            return list.filter(entry => entry.number);
+        }
+
+        function loadDefaultPAO() {
+            paoList = defaultPAO.map(entry => ({ ...entry }));
+            startPractice();
+        }
+
+        function startPractice() {
+            if (paoList.length === 0) {
+                alert('The uploaded file has no valid entries!');
+                return;
+            }
+            document.getElementById('remaining-items').style.display = 'block';
+            updateRemainingItems();
+            nextItem();
+        }
+
+        function nextItem() {
+            if (paoList.length === 0) {
+                showFinalStats();
+                return;
+            }
+            currentIndex = Math.floor(Math.random() * paoList.length);
+            document.getElementById('prompt-container').style.display = 'block';
+            document.getElementById('number-prompt').innerText = paoList[currentIndex].number;
+            startTime = new Date();
+            lockedElapsedTime = null;
+            updateAutoscoreInfo();
+        }
+
+        function revealAnswer() {
+            const entry = paoList[currentIndex];
+            const answer = `Person: ${entry.person}, Action: ${entry.action}, Object: ${entry.object}`;
+            document.getElementById('answer-display').innerText = answer;
+            document.getElementById('result-container').style.display = 'block';
+            if (startTime) {
+                lockedElapsedTime = ((new Date() - startTime) / 1000).toFixed(2);
+                updateAutoscoreInfo();
+            }
+        }
+
+        function gradeRecall(grade) {
+            const number = paoList[currentIndex].number;
+            history.push({ number, grade, time: lockedElapsedTime });
+            paoList.splice(currentIndex, 1);
+            updateHistory();
+            updateMetrics();
+            updateRemainingItems();
+
+            document.getElementById('result-container').style.display = 'none';
+            nextItem();
+        }
+
+        function updateRemainingItems() {
+            document.getElementById('items-left').innerText = paoList.length;
+        }
+
+        function updateHistory() {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+            history.forEach((item) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <span>${item.number}</span>
+                    <span>${item.grade}</span>
+                    <span>${item.time} seconds</span>
+                `;
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        function updateMetrics() {
+            const totalAttempts = history.length;
+            const gradeValues = { 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'F': 0 };
+            const totalGradePoints = history.reduce((sum, item) => sum + gradeValues[item.grade], 0);
+            const averageGrade = totalAttempts > 0 ? (totalGradePoints / totalAttempts).toFixed(2) : 'N/A';
+
+            document.getElementById('total-attempts').innerText = totalAttempts;
+            document.getElementById('average-grade').innerText = averageGrade;
+        }
+
+        function autoScore() {
+            if (lockedElapsedTime === null) return;
+
+            const elapsedTime = parseFloat(lockedElapsedTime);
+            let grade;
+
+            if (elapsedTime < 2) {
+                grade = 'A';
+            } else if (elapsedTime < 5) {
+                grade = 'B';
+            } else if (elapsedTime < 10) {
+                grade = 'C';
+            } else {
+                grade = 'D';
+            }
+
+            gradeRecall(grade);
+        }
+
+        function updateAutoscoreInfo() {
+            const infoElement = document.getElementById('autoscore-info');
+            if (lockedElapsedTime !== null) {
+                const elapsedTime = parseFloat(lockedElapsedTime);
+                let grade;
+                if (elapsedTime < 2) {
+                    grade = 'A';
+                } else if (elapsedTime < 5) {
+                    grade = 'B';
+                } else if (elapsedTime < 10) {
+                    grade = 'C';
+                } else {
+                    grade = 'D';
+                }
+                infoElement.innerText = `Elapsed time: ${lockedElapsedTime} seconds. Autoscore: ${grade}`;
+            } else {
+                infoElement.innerText = 'Autoscore will display here after revealing the answer.';
+            }
+        }
+
+        function showFinalStats() {
+            document.getElementById('prompt-container').style.display = 'none';
+            document.getElementById('result-container').style.display = 'none';
+            document.getElementById('remaining-items').style.display = 'none';
+
+            const totalAttempts = history.length;
+            const gradeValues = { 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'F': 0 };
+            const totalGradePoints = history.reduce((sum, item) => sum + gradeValues[item.grade], 0);
+            const averageGrade = totalAttempts > 0 ? (totalGradePoints / totalAttempts).toFixed(2) : 'N/A';
+
+            document.getElementById('final-total-attempts').innerText = totalAttempts;
+            document.getElementById('final-average-grade').innerText = averageGrade;
+
+            const finalStatsBody = document.getElementById('final-stats-body');
+            finalStatsBody.innerHTML = '';
+            history.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.number}</td>
+                    <td>${item.grade}</td>
+                    <td>${item.time}</td>
+                `;
+                finalStatsBody.appendChild(row);
+            });
+
+            document.getElementById('final-stats').style.display = 'block';
+        }
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById('final-stats-table');
+            const rows = Array.from(table.rows).slice(1);
+
+            const sortedRows = rows.sort((a, b) => {
+                const aText = a.cells[columnIndex].innerText;
+                const bText = b.cells[columnIndex].innerText;
+                return columnIndex === 2 ? parseFloat(aText) - parseFloat(bText) : aText.localeCompare(bText);
+            });
+
+            const tbody = table.tBodies[0];
+            tbody.innerHTML = '';
+            sortedRows.forEach(row => tbody.appendChild(row));
+        }
+
+        function undoLastGrade() {
+            if (history.length > 0) {
+                const lastItem = history.pop();
+                paoList.push({ 
+                    number: lastItem.number, 
+                    person: '', 
+                    action: '', 
+                    object: '' 
+                });
+                updateHistory();
+                updateMetrics();
+                updateRemainingItems();
+            }
+        }
+
+        function restartSession() {
+            location.reload();
+        }
+    </script>
 
     </script>
 </body>
