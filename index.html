@@ -8,94 +8,341 @@
     <!-- React and ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
-    <!-- Babel for JSX transformation -->
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Your existing styles -->
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        button {
+            background-color: #4a5568;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            margin: 0.5rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2d3748;
+        }
+
+        .grade-button {
+            background-color: #4a5568;
+            margin: 0.25rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f7fafc;
+            font-weight: bold;
+        }
+
+        #upload-container {
+            margin-bottom: 2rem;
+        }
+
+        #history-container {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f7fafc;
+            border-radius: 4px;
+        }
+
+        .history-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        #final-stats {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f7fafc;
+            border-radius: 4px;
+            display: none;
+        }
+
+        #prompt-container, #result-container {
+            margin: 2rem 0;
+            padding: 1rem;
+            background-color: #f7fafc;
+            border-radius: 4px;
+        }
+
+        .autoscore-info {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+
+        input[type="file"] {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+        }
+    </style>
 </head>
 <body>
-    <h1>Memory Recall Practice</h1>
+    <div class="container">
+        <h1>Memory Recall Practice</h1>
 
-    <!-- React mount point -->
-    <div id="memory-practice-app"></div>
+        <div id="memory-practice-app"></div>
 
-    <div id="upload-container">
-        <label for="csvFile">Upload your PAO CSV (Number,Person,Action,Object):</label>
-        <input type="file" id="csvFile" accept=".csv">
-        <button onclick="loadCSV()">Load</button>
-        <button onclick="loadDefaultPAO()">Use Default PAO</button>
-    </div>
-
-    <div id="remaining-items" style="display: none; margin-top: 20px;">
-        <p>Items left to review: <span id="items-left"></span></p>
-    </div>
-
-    <div id="prompt-container" style="display: none;">
-        <h2 id="number-prompt"></h2>
-        <button id="reveal-button" onclick="revealAnswer()">Reveal Answer (R)</button>
-        <button id="undo-button" onclick="undoLastGrade()">Undo Last Grade (U)</button>
-    </div>
-
-    <div id="result-container" style="display: none;">
-        <p id="answer-display"></p>
-        <div>
-            <p>Grade your recall:</p>
-            <button class="grade-button" id="grade-a" onclick="gradeRecall('A')">A</button>
-            <button class="grade-button" id="grade-b" onclick="gradeRecall('B')">B</button>
-            <button class="grade-button" id="grade-c" onclick="gradeRecall('C')">C</button>
-            <button class="grade-button" id="grade-d" onclick="gradeRecall('D')">D</button>
-            <button class="grade-button" id="grade-f" onclick="gradeRecall('F')">F</button>
-            <button class="grade-button" id="autoscore-button" onclick="autoScore()">Autoscore (S)</button>
+        <div id="upload-container">
+            <label for="csvFile">Upload your PAO CSV (Number,Person,Action,Object):</label>
+            <input type="file" id="csvFile" accept=".csv">
+            <button onclick="loadCSV()">Load</button>
+            <button onclick="loadDefaultPAO()">Use Default PAO</button>
         </div>
-        <div id="autoscore-info" class="autoscore-info"></div>
+
+        <div id="remaining-items" style="display: none; margin-top: 20px;">
+            <p>Items left to review: <span id="items-left"></span></p>
+        </div>
+
+        <div id="prompt-container" style="display: none;">
+            <h2 id="number-prompt"></h2>
+            <button id="reveal-button" onclick="revealAnswer()">Reveal Answer (R)</button>
+            <button id="undo-button" onclick="undoLastGrade()">Undo Last Grade (U)</button>
+        </div>
+
+        <div id="result-container" style="display: none;">
+            <p id="answer-display"></p>
+            <div>
+                <p>Grade your recall:</p>
+                <button class="grade-button" id="grade-a" onclick="gradeRecall('A')">A</button>
+                <button class="grade-button" id="grade-b" onclick="gradeRecall('B')">B</button>
+                <button class="grade-button" id="grade-c" onclick="gradeRecall('C')">C</button>
+                <button class="grade-button" id="grade-d" onclick="gradeRecall('D')">D</button>
+                <button class="grade-button" id="grade-f" onclick="gradeRecall('F')">F</button>
+                <button class="grade-button" id="autoscore-button" onclick="autoScore()">Autoscore (S)</button>
+            </div>
+            <div id="autoscore-info" class="autoscore-info"></div>
+        </div>
+
+        <div id="history-container">
+            <h3>Previous Attempts</h3>
+            <div id="history-list"></div>
+        </div>
+
+        <div id="metrics-container">
+            <h3>Session Metrics</h3>
+            <p>Total Attempts: <span id="total-attempts">0</span></p>
+            <p>Average Grade: <span id="average-grade">N/A</span></p>
+        </div>
+
+        <div id="final-stats">
+            <h3>Final Session Statistics</h3>
+            <table id="final-stats-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Number</th>
+                        <th onclick="sortTable(1)">Grade</th>
+                        <th onclick="sortTable(2)">Time Taken (seconds)</th>
+                    </tr>
+                </thead>
+                <tbody id="final-stats-body"></tbody>
+            </table>
+            <p>Total Attempts: <span id="final-total-attempts"></span></p>
+            <p>Average Grade: <span id="final-average-grade"></span></p>
+            <button onclick="restartSession()">Restart</button>
+        </div>
     </div>
 
-    <div id="history-container">
-        <h3>Previous Attempts</h3>
-        <div id="history-list"></div>
-    </div>
-
-    <div id="metrics-container">
-        <h3>Session Metrics</h3>
-        <p>Total Attempts: <span id="total-attempts">0</span></p>
-        <p>Average Grade: <span id="average-grade">N/A</span></p>
-    </div>
-
-    <div id="final-stats">
-        <h3>Final Session Statistics</h3>
-        <table id="final-stats-table">
-            <thead>
-                <tr>
-                    <th onclick="sortTable(0)">Number</th>
-                    <th onclick="sortTable(1)">Grade</th>
-                    <th onclick="sortTable(2)">Time Taken (seconds)</th>
-                </tr>
-            </thead>
-            <tbody id="final-stats-body"></tbody>
-        </table>
-        <p>Total Attempts: <span id="final-total-attempts"></span></p>
-        <p>Average Grade: <span id="final-average-grade"></span></p>
-        <button onclick="restartSession()">Restart</button>
-    </div>
-
-    <!-- React components -->
-    <script type="text/babel" src="components/MemoryPracticeSelector.jsx"></script>
-    
-    <!-- Initialize React app -->
+    <!-- Memory Practice Selector Component -->
     <script type="text/babel">
+        const { useState } = React;
+
+        const Tabs = ({ children, defaultValue, onValueChange }) => {
+            const [value, setValue] = useState(defaultValue);
+            
+            const handleValueChange = (newValue) => {
+                setValue(newValue);
+                if (onValueChange) onValueChange(newValue);
+            };
+            
+            return (
+                <div className="w-full">
+                    {React.Children.map(children, child => 
+                        React.cloneElement(child, { value, onValueChange: handleValueChange })
+                    )}
+                </div>
+            );
+        };
+
+        const TabsList = ({ children }) => (
+            <div className="flex space-x-4 mb-4 border-b">
+                {children}
+            </div>
+        );
+
+        const TabsTrigger = ({ value, children, onClick }) => (
+            <button 
+                className="px-4 py-2 hover:bg-gray-100 border-b-2 border-transparent hover:border-gray-300"
+                onClick={() => onClick(value)}
+            >
+                {children}
+            </button>
+        );
+
+        const TabsContent = ({ value, activeValue, children }) => (
+            <div className={value === activeValue ? 'block' : 'hidden'}>
+                {children}
+            </div>
+        );
+
+        const Card = ({ children, className }) => (
+            <div className={`bg-white rounded-lg shadow-md p-6 ${className}`}>
+                {children}
+            </div>
+        );
+
+        function MemoryPracticeSelector() {
+            const [activeMode, setActiveMode] = useState('pao');
+            
+            const modes = [
+                {
+                    id: 'pao',
+                    title: '2-Digit PAO',
+                    description: 'Practice Person-Action-Object associations for numbers 00-99',
+                    icon: '🧠'
+                },
+                {
+                    id: 'cards',
+                    title: 'Card PAO',
+                    description: 'Learn and practice card-specific PAO systems',
+                    icon: '🎴'
+                },
+                {
+                    id: 'peg',
+                    title: 'Peg System',
+                    description: 'Master the peg system for ordered list memorization',
+                    icon: '📝'
+                },
+                {
+                    id: 'names',
+                    title: 'Names & Faces',
+                    description: 'Techniques for remembering names and associated information',
+                    icon: '👥'
+                }
+            ];
+            
+            return (
+                <div className="w-full max-w-4xl mx-auto p-4">
+                    <Tabs defaultValue="pao" onValueChange={setActiveMode}>
+                        <TabsList>
+                            {modes.map(mode => (
+                                <TabsTrigger
+                                    key={mode.id}
+                                    value={mode.id}
+                                    onClick={() => setActiveMode(mode.id)}
+                                >
+                                    <span className="mr-2">{mode.icon}</span>
+                                    {mode.title}
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                        {modes.map(mode => (
+                            <TabsContent key={mode.id} value={mode.id} activeValue={activeMode}>
+                                <Card>
+                                    <h2 className="text-xl font-bold mb-2">
+                                        {mode.icon} {mode.title}
+                                    </h2>
+                                    <p className="text-gray-600 mb-4">{mode.description}</p>
+                                    <div className="min-h-[200px] flex items-center justify-center border-2 border-dashed border-gray-200 rounded-lg">
+                                        <p className="text-gray-500">
+                                            {mode.id === 'pao' ? 'Current active system' : 'Coming soon!'}
+                                        </p>
+                                    </div>
+                                </Card>
+                            </TabsContent>
+                        ))}
+                    </Tabs>
+                </div>
+            );
+        }
+
         ReactDOM.render(
             <MemoryPracticeSelector />,
             document.getElementById('memory-practice-app')
         );
     </script>
 
-    <!-- Your existing script -->
-    <script src="script.js"></script>
+    <!-- Original JavaScript -->
+    <script>
+        let paoList = [];
+        let currentIndex = -1;
+        let history = [];
+        let startTime = null;
+        let lockedElapsedTime = null;
 
+        const defaultPAO = [
+            { number: "00", person: "Owl", action: "Hooting", object: "Moon" },
+            // ... your existing defaultPAO data ...
+        ];
+
+        document.addEventListener('keydown', function(event) {
+            switch(event.key.toLowerCase()) {
+                case 'r':
+                    revealAnswer();
+                    break;
+                case 'u':
+                    undoLastGrade();
+                    break;
+                case 'a':
+                    gradeRecall('A');
+                    break;
+                case 'b':
+                    gradeRecall('B');
+                    break;
+                case 'c':
+                    gradeRecall('C');
+                    break;
+                case 'd':
+                    gradeRecall('D');
+                    break;
+                case 'f':
+                    gradeRecall('F');
+                    break;
+                case 's':
+                    autoScore();
+                    break;
+            }
+        });
+
+        // ... rest of your existing JavaScript functions ...
+
+    </script>
 </body>
 </html>
